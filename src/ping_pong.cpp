@@ -140,13 +140,16 @@ Paddle1 paddle1;
 
 int main()
 {
-    int dispalyWidth = 1280;
+    int displayWidth = 1280;
     int displayHeight = 600;
+    Image icon = LoadImage("assets/ping_pong.png");
 
-    InitWindow(dispalyWidth, displayHeight, "Ping Pong");
+    InitWindow(displayWidth, displayHeight, "Ping Pong");
+    SetWindowIcon(icon);
+    UnloadImage(icon);
     SetTargetFPS(60);
 
-    ball.x = dispalyWidth / 2;
+    ball.x = displayWidth / 2;
     ball.y = displayHeight / 2;
     ball.radius = 15;
     ball.speed_x = 7;
@@ -160,7 +163,7 @@ int main()
 
     paddle2.width = 25;
     paddle2.height = 120;
-    paddle2.x = dispalyWidth - paddle2.width - 10;
+    paddle2.x = displayWidth - paddle2.width - 10;
     paddle2.y = displayHeight / 2 - paddle1.height / 2;
     paddle2.speed = 6;
 
@@ -183,14 +186,14 @@ int main()
         }
 
         ClearBackground(Dark_Green);
-        DrawRectangle(dispalyWidth / 2, 0, dispalyWidth / 2, displayHeight, Green);
-        DrawCircle(dispalyWidth / 2, displayHeight / 2, 150, Light_Green);
-        DrawLine(dispalyWidth / 2, 0, dispalyWidth / 2, displayHeight, WHITE);
+        DrawRectangle(displayWidth / 2, 0, displayWidth / 2, displayHeight, Green);
+        DrawCircle(displayWidth / 2, displayHeight / 2, 150, Light_Green);
+        DrawLine(displayWidth / 2, 0, displayWidth / 2, displayHeight, WHITE);
         ball.Draw();
         paddle1.Draw();
         paddle2.Draw();
-        DrawText(TextFormat("%i", player_score), dispalyWidth / 4 - 20, 20, 80, WHITE);
-        DrawText(TextFormat("%i", cpu_score), 3 * dispalyWidth / 4 - 20, 20, 80, WHITE);
+        DrawText(TextFormat("%i", player_score), displayWidth / 4 - 20, 20, 80, WHITE);
+        DrawText(TextFormat("%i", cpu_score), 3 * displayWidth / 4 - 20, 20, 80, WHITE);
 
         EndDrawing();
     }
