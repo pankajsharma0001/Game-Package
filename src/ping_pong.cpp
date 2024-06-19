@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <raylib.h>
+#include "ping_pong.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ public:
     void Reset()
     {
         x = GetScreenWidth() / 2;
-        y = GetScreenHeight() / 2;
+        y = GetRandomValue(20, GetScreenHeight() -20);
         int choices[2] = {-1, 1};
         speed_x *= choices[GetRandomValue(0, 1)];
         speed_y *= choices[GetRandomValue(0, 1)];
@@ -45,13 +46,13 @@ public:
         if (x + radius >= GetScreenWidth())
         { // player wins
             player_score++;
-            sleep(1);
+            sleep(0.8);
             Reset();
         }
         if (x - radius <= 0)
         { // cpu wins
             cpu_score++;
-            sleep(1);
+            sleep(0.8);
             Reset();
         }
     }
