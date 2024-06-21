@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include <raylib.h>
 #include "./ping_pong/ping_pong.cpp"
 
 enum GameScreen { MENU = 0, PLAY, OPTIONS, HELP, PING_PONG, TERTRIS, T048};
