@@ -1,8 +1,6 @@
-#include "ping_pong.h"
+#include "../include/ping_pong/ping_pong.h"
 
 using namespace std;
-
-
 
 void Ball::Draw()
 {
@@ -105,7 +103,7 @@ Pong::Pong()
 {
     displayWidth = 1280;
     displayHeight = 600;
-    icon = LoadImage("assets/ping_pong.png");
+    icon = LoadImage("./assets/images/ping_pong.png");
 }
 
 void Pong::Play()

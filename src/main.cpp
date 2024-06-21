@@ -2,6 +2,7 @@
 #include "./ping_pong/ping_pong.cpp"
 
 enum GameScreen { MENU = 0, PLAY, OPTIONS, HELP, PING_PONG, TERTRIS, T048};
+
 const int screenWidth = 800;
 const int screenHeight = 600;
 const char *buttonTexts[4] = {"PLAY", "OPTIONS", "HELP", "QUIT"};
@@ -42,6 +43,7 @@ int main() {
                     return 0;
                 }
             }
+
         } else if (currentScreen == PLAY) {
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                 if (CheckCollisionPointRec(mousePoint, buttons[0])) {
@@ -82,6 +84,7 @@ int main() {
 
     return 0;
 }
+
 
 void DrawMenu() {
     Vector2 mousePoint = GetMousePosition();
