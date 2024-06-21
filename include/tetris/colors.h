@@ -1,6 +1,6 @@
 #pragma once
-#include<raylib.h>
-#include<vector>
+#include <raylib.h>
+#include <vector>
 
 extern const Color darkGrey;
 extern const Color green;
