@@ -83,17 +83,17 @@ void Paddle2::Update()
 }
 
 void cpuPaddle::Update(int ball_height)
-{
-    if (y + height / 2 > ball_height)
     {
-        y -= speed;
+        if (y + height / 2 > ball_height)
+        {
+            y -= speed;
+        }
+        if (y + height / 2 <= ball_height)
+        {
+            y += speed;
+        }
+        LimitMovement();
     }
-    if (y + height / 2 <= ball_height)
-    {
-        y += speed;
-    }
-    LimitMovement();
-}
 
 Ball ball;
 cpuPaddle paddle2;
