@@ -1,8 +1,9 @@
 #pragma once
-#include<vector>
-#include<raylib.h>
+#include <vector>
+#include <raylib.h>
 
-class Grid{
+class Grid
+{
 public:
     Grid();
     int grid[20][10];
@@ -12,10 +13,11 @@ public:
     int ClearFullRows();
     void Initialize();
     void Print();
+
 private:
     bool IsRowFull(int row);
     void ClearRow(int row);
-    void MoveRowDown(int row, int  numRows);
+    void MoveRowDown(int row, int numRows);
     int numRows;
     int numColumns;
     int cellSize;
