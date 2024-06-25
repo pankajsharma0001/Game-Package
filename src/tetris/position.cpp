@@ -1,4 +1,4 @@
-#include "../include/tetris/position.h"
+#include "tetriss/position.h"
 
 Position::Position(int row, int column)
 {

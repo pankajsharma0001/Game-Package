@@ -1,6 +1,6 @@
-#include "../include/tetris/grid.h"
+#include "tetriss/grid.h"
 #include <iostream>
-#include "../include/tetris/colors.h"
+#include "tetriss/colors.h"
 
 Grid::Grid()
 {

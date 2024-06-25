@@ -1,4 +1,4 @@
-#include "../include/tetris/block.h"
+#include "tetriss/block.h"
 
 Block::Block()
 {

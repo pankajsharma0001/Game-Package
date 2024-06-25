@@ -1,4 +1,4 @@
-#include "../include/tetris/colors.h"
+#include "tetriss/colors.h"
 
 const Color darkGrey = {26, 31, 40, 255};
 const Color green = {47, 230, 23, 255};

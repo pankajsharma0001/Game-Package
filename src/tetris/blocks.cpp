@@ -1,5 +1,5 @@
-#include "../include/tetris/block.h"
-#include "../include/tetris/position.h"
+#include "tetriss/block.h"
+#include "tetriss/position.h"
 
 class LBlock : public Block
 {

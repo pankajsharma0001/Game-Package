@@ -1,5 +1,11 @@
 #include "raylib.h"
 #include "ping_pong/ping_pong.cpp"
+#include "tetris/tetris.cpp"
+#include "tetris/game.cpp"
+#include "tetris/block.cpp"
+#include "tetris/colors.cpp"
+#include "tetris/grid.cpp"
+#include "tetris/position.cpp"
 
 enum GameScreen
 {
@@ -30,6 +36,7 @@ void DrawPlayOptions();
 int main()
 {
     Pong pong;
+    Tertris tertris;
     // Initialization
     InitWindow(screenWidth, screenHeight, "Game Menu Example");
 
@@ -112,7 +119,7 @@ int main()
         }
         else if (currentScreen == TERTRIS)
         {
-            DrawText("GAME MODE 2", screenWidth / 2 - MeasureText("GAME MODE 2", 20) / 2, screenHeight / 2 - 10, 20, GRAY);
+            tertris.Play();
         }
 
         EndDrawing();

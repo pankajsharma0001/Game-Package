@@ -1,4 +1,4 @@
-#include "../include/tetris/game.h"
+#include "tetriss/game.h"
 #include <random>
 
 Game::Game()
