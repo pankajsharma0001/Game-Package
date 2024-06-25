@@ -1,4 +1,4 @@
-#include "../include/ping_pong/ping_pong.h"
+#include "./include/ping_pong/ping_pong.h"
 
 using namespace std;
 
