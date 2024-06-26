@@ -1,7 +1,5 @@
 #include "pingpong/ping_pong.h"
 
-using namespace std;
-
 void Ball::Draw()
 {
     DrawCircle(x, y, radius, Yellow);

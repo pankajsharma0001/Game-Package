@@ -92,6 +92,7 @@ void Game::HandleInput()
             MoveBlockDown();
             res--;
         }
+        UpdateScore(0, res * (-5));
     }
 }
 
@@ -203,6 +204,7 @@ void Game::Reset()
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
     score = 0;
+    position = 20;
 }
 
 void Game::UpdateScore(int linesCleared, int moveDownPoints)

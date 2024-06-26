@@ -1,8 +1,5 @@
 #include <unistd.h>
-#include <iostream>
 #include <raylib.h>
-
-using namespace std;
 
 const Color Green = {38, 185, 154, 255};
 const Color Dark_Green = {20, 160, 133, 255};
