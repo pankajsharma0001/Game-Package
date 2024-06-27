@@ -12,7 +12,8 @@ Tertris::Tertris()
 bool Tertris::EventTriggered(double interval)
 {
     double currentTime = GetTime();
-    if(currentTime - lastUpdateTime >= interval){
+    if (currentTime - lastUpdateTime >= interval)
+    {
         lastUpdateTime = currentTime;
         return true;
     }
@@ -26,17 +27,20 @@ void Tertris::Play()
 
     Game game = Game();
 
-    while(!WindowShouldClose()){
+    while (!WindowShouldClose())
+    {
         UpdateMusicStream(game.music);
         game.HandleInput();
-        if(EventTriggered(0.2)){
+        if (EventTriggered(0.2))
+        {
             game.MoveBlockDown();
         }
         BeginDrawing();
         ClearBackground(darkBlue);
         DrawTextEx(font, "Score", {365, 15}, 38, 2, WHITE);
         DrawTextEx(font, "Next", {370, 175}, 38, 2, WHITE);
-        if(game.gameOver){
+        if (game.gameOver)
+        {
             DrawTextEx(font, "Game Over", {320, 450}, 38, 2, WHITE);
         }
         DrawRectangleRounded({320, 55, 170, 60}, 0.3, 6, lightBlue);
@@ -49,6 +53,5 @@ void Tertris::Play()
         game.Draw();
         EndDrawing();
     }
-    
     CloseWindow();
 }

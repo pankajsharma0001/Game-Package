@@ -68,13 +68,12 @@ public:
     Main()
     {
         InitAudioDevice();
-        background = LoadMusicStream("../assets/sounds/background.mp3");
+        background = LoadMusicStream("./assets/sounds/background.mp3");
         PlayMusicStream(background);
     }
     ~Main()
     {
         UnloadMusicStream(background);
-        CloseAudioDevice();
     }
 };
 
@@ -255,21 +254,18 @@ int main()
         }
         else if (currentScreen == PING_PONG)
         {
-            gam.~Main();
+            CloseWindow();
             pong.Play();
+            return 0;
         }
         else if (currentScreen == TERTRIS)
         {
-            gam.~Main();
+            CloseWindow();
             tertris.Play();
+            return 0;
         }
-
         EndDrawing();
     }
-
-    // De-Initialization
-    CloseWindow(); // Close window and OpenGL context
-
     return 0;
 }
 
