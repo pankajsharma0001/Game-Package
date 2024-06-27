@@ -15,8 +15,4 @@ public:
     Tertris();
     bool EventTriggered(double interval);
     void Play();
-    ~Tertris()
-    {
-        UnloadFont(font);
-    }
 };
