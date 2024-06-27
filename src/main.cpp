@@ -59,8 +59,7 @@ Rectangle optionButtons[2] = {
 
 Rectangle backButton = {screenWidth / 2 - 100, 300, 200, 50}; // Back button in options menu
 
-int volume = 100;
-
+int volume;
 
 class Main{
 public:
@@ -69,6 +68,9 @@ public:
         InitAudioDevice();
         background = LoadMusicStream("../assets/sounds/background.mp3");
         PlayMusicStream(background);
+        background.looping = true;
+        volume = 70;
+        SetMusicVolume(background, volume);
     }
     ~Main(){
         UnloadMusicStream(background);
@@ -155,6 +157,7 @@ int main()
                 {
                     if (volume < 100)
                         volume += 10;
+                    SetMusicVolume(gam.background, volume);
                 }
             }
             else
@@ -169,6 +172,7 @@ int main()
                 {
                     if (volume > 0)
                         volume -= 10;
+                    SetMusicVolume(gam.background, volume);
                 }
             }
             else

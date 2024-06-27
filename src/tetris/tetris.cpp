@@ -1,5 +1,8 @@
 #include "tetriss/Tertris.h"
+#include <fstream>
+//#include <cstdio>
 
+const char* highScoreFilePath = "assets/highscore.txt";
 double lastUpdateTime = 0;
 
 Tertris::Tertris()
@@ -7,6 +10,28 @@ Tertris::Tertris()
     windowWidth = 500;
     windowHeight = 620;
     font = LoadFontEx("Font/monogram.ttf", 64, 0, 0);
+}
+
+void Tertris::SaveHighScore(int score) {
+    std::ofstream file(highScoreFilePath);
+    if (file.is_open()) {
+        file << score;
+        file.close();
+    } else {
+        std::cerr << "Unable to open file for writing high score!" << std::endl;
+    }
+}
+
+int Tertris::LoadHighScore() {
+    int highScore = 0;
+    std::ifstream file(highScoreFilePath);
+    if (file.is_open()) {
+        file >> highScore;
+        file.close();
+    } else {
+        std::cerr << "Unable to open file for reading high score!" << std::endl;
+    }
+    return highScore;
 }
 
 bool Tertris::EventTriggered(double interval)
@@ -24,6 +49,7 @@ void Tertris::Play()
     InitWindow(windowWidth, windowHeight, "Tertris");
     SetTargetFPS(60);
 
+    int highScore = LoadHighScore();
     Game game = Game();
 
     while(!WindowShouldClose()){
@@ -37,7 +63,15 @@ void Tertris::Play()
         DrawTextEx(font, "Score", {365, 15}, 38, 2, WHITE);
         DrawTextEx(font, "Next", {370, 175}, 38, 2, WHITE);
         if(game.gameOver){
-            DrawTextEx(font, "Game Over", {320, 450}, 38, 2, WHITE);
+            if(game.score > highScore){
+                highScore = game.score;
+                SaveHighScore(highScore);
+            }
+            char highscor[10];
+            sprintf(highscor, "%d", highScore);
+            DrawTextEx(font, "Game Over", {320, 430}, 38, 2, WHITE);
+            DrawTextEx(font, "High Score", {320, 490}, 35, 2, WHITE);
+            DrawTextEx(font, highscor, {370, 550}, 38, 2, WHITE);
         }
         DrawRectangleRounded({320, 55, 170, 60}, 0.3, 6, lightBlue);
 

@@ -9,6 +9,8 @@ private:
     int windowWidth;
     int windowHeight;
     Font font;
+    void SaveHighScore(int score);
+    int LoadHighScore();
     
 public:
     Tertris();
