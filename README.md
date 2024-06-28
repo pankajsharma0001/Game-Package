@@ -62,15 +62,14 @@ To run the games in this repository, you need to have Raylib installed on your s
    Create a Makefile in your project directory and add the following content:
    ```bash
    # Define the source files for the project
-   SOURCES = ./src/fourvar.cpp ./src/grid.cpp ./src/kmapsolver.cpp ./src/main.cpp ./src/threevar.cpp ./src/twovar.cpp
+   SOURCES = ./src/main.cpp
 
    # Default target to compile the project
    default:
-    # Compile the source files into an executable named game.exe
-    g++ $(SOURCES) -o ./build/game.exe -g -O1 -Wall -Wno-missing-braces -I include/ -L lib/ -lraylib -lopengl32 -lgdi32 -lwinmm
+	g++ $(SOURCES) -o ./build/game.exe -g -O1 -Wall -Wno-missing-braces -I include/ -L lib/ -lraylib -lopengl32 -lgdi32 -lwinmm 
     
-    # Run the compiled executable
-    ./build/game.exe
+   # Run the compiled executable
+   ./build/game.exe
 
 
 8. **Run the Program**:

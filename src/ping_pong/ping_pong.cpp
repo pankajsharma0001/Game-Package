@@ -136,7 +136,6 @@ void Pong::Play()
     while (!WindowShouldClose())
     {
         BeginDrawing();
-
         ball.Update();
         paddle1.Update();
         paddle2.Update(ball.y);
@@ -159,7 +158,6 @@ void Pong::Play()
         paddle2.Draw();
         DrawText(TextFormat("%i", player_score), displayWidth / 4 - 20, 20, 80, WHITE);
         DrawText(TextFormat("%i", cpu_score), 3 * displayWidth / 4 - 20, 20, 80, WHITE);
-
         EndDrawing();
     }
     CloseWindow();

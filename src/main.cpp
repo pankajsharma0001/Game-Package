@@ -54,25 +54,26 @@ Rectangle musicButtons[4] = {
     {screenWidth / 2 - 100, 400, 200, 50}};
 
 Rectangle optionButtons[2] = {
-    {screenWidth / 2 + 120, 200, 50, 50}, // Plus button
+    {screenWidth / 2 + 120, 200, 50, 50},  // Plus button
     {screenWidth / 2 + 180, 200, 50, 50}}; // Minus button
 
 Rectangle backButton = {screenWidth / 2 - 100, 300, 200, 50}; // Back button in options menu
 
 int volume = 100;
 
-
-class Main{
+class Main
+{
 public:
     Music background;
-    Main(){
+    Main()
+    {
         InitAudioDevice();
-        background = LoadMusicStream("../assets/sounds/background.mp3");
+        background = LoadMusicStream("./assets/sounds/background.mp3");
         PlayMusicStream(background);
     }
-    ~Main(){
+    ~Main()
+    {
         UnloadMusicStream(background);
-        CloseAudioDevice();
     }
 };
 
@@ -212,13 +213,12 @@ int main()
         else if (currentScreen == PINGPONG_INSTRUCTIONS ||
                  currentScreen == TERTIS_INSTRUCTIONS ||
                  currentScreen == INSTUCTIONS)
-                {
-                    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-                    {
-                        currentScreen = HELP_MENU; // Back to HELP menu on click
-                    }
-                }
-
+        {
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                currentScreen = HELP_MENU; // Back to HELP menu on click
+            }
+        }
 
         // Draw
         BeginDrawing();
@@ -254,21 +254,18 @@ int main()
         }
         else if (currentScreen == PING_PONG)
         {
-            gam.~Main();
+            CloseWindow();
             pong.Play();
+            return 0;
         }
         else if (currentScreen == TERTRIS)
         {
-            gam.~Main();
+            CloseWindow();
             tertris.Play();
+            return 0;
         }
-
         EndDrawing();
     }
-
-    // De-Initialization
-    CloseWindow(); // Close window and OpenGL context
-
     return 0;
 }
 
