@@ -6,21 +6,7 @@
 #include "tetris/colors.cpp"
 #include "tetris/grid.cpp"
 #include "tetris/position.cpp"
-
-enum GameScreen
-{
-    MENU = 0,
-    PLAY,
-    OPTIONS,
-    HELP_MENU,
-    PINGPONG_INSTRUCTIONS,
-    TERTIS_INSTRUCTIONS,
-
-    INSTUCTIONS,
-    PING_PONG,
-    TERTRIS,
-    T048
-};
+#include "screen.h"
 
 const int screenWidth = 800;
 const int screenHeight = 600;
@@ -69,10 +55,11 @@ public:
         background = LoadMusicStream("../assets/sounds/background.mp3");
         PlayMusicStream(background);
         background.looping = true;
-        volume = 70;
-        SetMusicVolume(background, volume);
+        volume = 50;
+        SetMusicVolume(background, volume/100.0f);
     }
     ~Main(){
+        StopMusicStream(background);
         UnloadMusicStream(background);
         CloseAudioDevice();
     }
@@ -259,12 +246,26 @@ int main()
         else if (currentScreen == PING_PONG)
         {
             gam.~Main();
-            pong.Play();
+            // CloseWindow();
+            // InitWindow(1280, 600, "Ping Pong");
+            pong.Play(currentScreen);
+            // if (currentScreen == MENU)
+            // {
+            //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
+            //     PlayMusicStream(gam.background); // Restart background music if required
+            // }
         }
         else if (currentScreen == TERTRIS)
         {
             gam.~Main();
-            tertris.Play();
+            // CloseWindow();
+            // InitWindow(500, 620, "Tertris");
+            tertris.Play(currentScreen);
+            // if (currentScreen == MENU)
+            // {
+            //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
+            //     PlayMusicStream(gam.background); // Restart background music if required
+            // }
         }
 
         EndDrawing();

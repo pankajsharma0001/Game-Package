@@ -104,7 +104,7 @@ Pong::Pong()
     icon = LoadImage("./assets/images/ping_pong.png");
 }
 
-void Pong::Play()
+void Pong::Play(GameScreen& currentScreen)
 {
     Ball ball;
     cpuPaddle paddle2;
@@ -149,7 +149,9 @@ void Pong::Play()
         {
             ball.speed_x *= -1;
         }
-
+        // if(IsKeyDown(KEY_ENTER)){
+        //     currentScreen = MENU;
+        // }
         ClearBackground(Dark_Green);
         DrawRectangle(displayWidth / 2, 0, displayWidth / 2, displayHeight, Green);
         DrawCircle(displayWidth / 2, displayHeight / 2, 150, Light_Green);

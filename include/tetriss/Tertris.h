@@ -3,6 +3,7 @@
 #include "game.h"
 #include "colors.h"
 #include<iostream>
+#include "screen.h"
 
 class Tertris{
 private:
@@ -15,5 +16,5 @@ private:
 public:
     Tertris();
     bool EventTriggered(double interval);
-    void Play();
+    void Play(GameScreen&);
 };

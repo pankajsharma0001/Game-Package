@@ -1,5 +1,7 @@
+#pragma once
 #include <unistd.h>
 #include <raylib.h>
+#include "screen.h"
 
 const Color Green = {38, 185, 154, 255};
 const Color Dark_Green = {20, 160, 133, 255};
@@ -56,7 +58,7 @@ class Pong
 {
 public:
     Pong();
-    void Play();
+    void Play(GameScreen&);
 
 private:
     int displayWidth;

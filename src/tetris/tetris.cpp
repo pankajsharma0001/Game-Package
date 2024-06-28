@@ -44,7 +44,7 @@ bool Tertris::EventTriggered(double interval)
     return false;
 }
 
-void Tertris::Play()
+void Tertris::Play(GameScreen& currentScreen)
 {
     InitWindow(windowWidth, windowHeight, "Tertris");
     SetTargetFPS(60);
@@ -58,6 +58,10 @@ void Tertris::Play()
         if(EventTriggered(0.2)){
             game.MoveBlockDown();
         }
+        // if(IsKeyDown(KEY_ENTER)){
+        //     currentScreen = MENU;
+        //     break;
+        // }
         BeginDrawing();
         ClearBackground(darkBlue);
         DrawTextEx(font, "Score", {365, 15}, 38, 2, WHITE);
