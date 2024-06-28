@@ -10,10 +10,11 @@ Tertris::Tertris()
     windowWidth = 500;
     windowHeight = 620;
     font = LoadFontEx("Font/monogram.ttf", 64, 0, 0);
+    highScore = LoadHighScore();
 }
 
 void Tertris::SaveHighScore(int score) {
-    std::ofstream file(highScoreFilePath);
+    std::ofstream file(highScoreFilePath, std::ios::out | std::ios::trunc);
     if (file.is_open()) {
         file << score;
         file.close();
@@ -45,19 +46,18 @@ bool Tertris::EventTriggered(double interval)
     return false;
 }
 
-void Tertris::Play(GameScreen& currentScreen)
+void Tertris::Play()
 {
     InitWindow(windowWidth, windowHeight, "Tertris");
     SetTargetFPS(60);
 
-    int highScore = LoadHighScore();
     Game game = Game();
 
     while (!WindowShouldClose())
     {
         UpdateMusicStream(game.music);
         game.HandleInput();
-        if (EventTriggered(0.2))
+        if (EventTriggered(0.3))
         {
             game.MoveBlockDown();
         }

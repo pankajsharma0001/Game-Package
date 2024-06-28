@@ -62,6 +62,7 @@ public:
     ~Main(){
         StopMusicStream(background);
         UnloadMusicStream(background);
+        CloseAudioDevice();
     }
 };
 
@@ -245,9 +246,10 @@ int main()
         else if (currentScreen == PING_PONG)
         {
             gam.~Main();
-            // CloseWindow();
+            CloseWindow();
             // InitWindow(1280, 600, "Ping Pong");
             pong.Play(currentScreen);
+            return 0;
             // if (currentScreen == MENU)
             // {
             //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
@@ -257,9 +259,10 @@ int main()
         else if (currentScreen == TERTRIS)
         {
             gam.~Main();
-            // CloseWindow();
+            CloseWindow();
             // InitWindow(500, 620, "Tertris");
-            tertris.Play(currentScreen);
+            tertris.Play();
+            return 0;
             // if (currentScreen == MENU)
             // {
             //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
@@ -269,6 +272,7 @@ int main()
 
         EndDrawing();
     }
+    CloseWindow();
     return 0;
 }
 
