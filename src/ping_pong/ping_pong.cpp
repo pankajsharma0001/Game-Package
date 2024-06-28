@@ -136,7 +136,6 @@ void Pong::Play(GameScreen& currentScreen)
     while (!WindowShouldClose())
     {
         BeginDrawing();
-
         ball.Update();
         paddle1.Update();
         paddle2.Update(ball.y);

@@ -1,11 +1,12 @@
 #pragma once
-#include<raylib.h>
+#include <raylib.h>
 #include "game.h"
 #include "colors.h"
 #include<iostream>
 #include "screen.h"
 
-class Tertris{
+class Tertris
+{
 private:
     int windowWidth;
     int windowHeight;

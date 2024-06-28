@@ -37,7 +37,8 @@ int Tertris::LoadHighScore() {
 bool Tertris::EventTriggered(double interval)
 {
     double currentTime = GetTime();
-    if(currentTime - lastUpdateTime >= interval){
+    if (currentTime - lastUpdateTime >= interval)
+    {
         lastUpdateTime = currentTime;
         return true;
     }
@@ -52,10 +53,12 @@ void Tertris::Play(GameScreen& currentScreen)
     int highScore = LoadHighScore();
     Game game = Game();
 
-    while(!WindowShouldClose()){
+    while (!WindowShouldClose())
+    {
         UpdateMusicStream(game.music);
         game.HandleInput();
-        if(EventTriggered(0.2)){
+        if (EventTriggered(0.2))
+        {
             game.MoveBlockDown();
         }
         // if(IsKeyDown(KEY_ENTER)){
@@ -87,6 +90,5 @@ void Tertris::Play(GameScreen& currentScreen)
         game.Draw();
         EndDrawing();
     }
-    
     CloseWindow();
 }
