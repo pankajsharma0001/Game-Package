@@ -57,7 +57,7 @@ void Tertris::Play()
     {
         UpdateMusicStream(game.music);
         game.HandleInput();
-        if (EventTriggered(0.3))
+        if (EventTriggered(0.5))
         {
             game.MoveBlockDown();
         }

@@ -74,6 +74,8 @@ void DrawPINGPONGHELP();
 void Drawtertishelp();
 void help();
 
+ GameScreen currentScreen = MENU;
+
 int main()
 {
     Main gam;
@@ -82,7 +84,7 @@ int main()
     // Initialization
     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
 
-    GameScreen currentScreen = MENU;
+   
     SetTargetFPS(60);
     // Main game loop
     while (!WindowShouldClose())
@@ -249,7 +251,6 @@ int main()
             CloseWindow();
             // InitWindow(1280, 600, "Ping Pong");
             pong.Play(currentScreen);
-            return 0;
             // if (currentScreen == MENU)
             // {
             //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
@@ -262,7 +263,6 @@ int main()
             CloseWindow();
             // InitWindow(500, 620, "Tertris");
             tertris.Play();
-            return 0;
             // if (currentScreen == MENU)
             // {
             //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");

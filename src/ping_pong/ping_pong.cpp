@@ -1,4 +1,10 @@
 #include "pingpong/ping_pong.h"
+#include "computer.cpp"
+#include "player.cpp"
+#include <iostream>
+
+enum GameMode { WINDOW = 0, COMPUTER, MULTIPLAYER};
+GameMode Screen = WINDOW;
 
 void Ball::Draw()
 {
@@ -10,8 +16,8 @@ void Ball::Reset()
     x = GetScreenWidth() / 2;
     y = GetRandomValue(20, GetScreenHeight() - 20);
     int choices[2] = {-1, 1};
-    speed_x *= choices[GetRandomValue(0, 1)];
-    speed_y *= choices[GetRandomValue(0, 1)];
+    speed_x = 7 * choices[GetRandomValue(0, 1)];
+    speed_y = 7 * choices[GetRandomValue(0, 1)];
 }
 
 void Ball::Update()
@@ -26,14 +32,23 @@ void Ball::Update()
     if (x + radius >= GetScreenWidth())
     { // player wins
         player_score++;
+        lastScoreTime = GetTime();
         sleep(0.8);
         Reset();
     }
     if (x - radius <= 0)
     { // cpu wins
         cpu_score++;
+        lastScoreTime = GetTime();
         sleep(0.8);
         Reset();
+    }
+    // Check if we need to increase the speed
+    if (GetTime() - lastScoreTime > speedIncrementInterval) {
+        speed_x *= speedIncrementFactor;  // Increase speed by 10%
+        speed_y *= speedIncrementFactor;  // Increase speed by 10%
+        lastScoreTime = GetTime();  // Reset the timer
+        //printf("Speed increased: speed_x = %f, speed_y = %f\n", speed_x, speed_y);  // Debug print
     }
 };
 
@@ -106,61 +121,66 @@ Pong::Pong()
 
 void Pong::Play(GameScreen& currentScreen)
 {
-    Ball ball;
-    cpuPaddle paddle2;
-    Paddle1 paddle1;
+    Computer comp;
+    Player multiplayer;
 
     InitWindow(displayWidth, displayHeight, "Ping Pong");
     SetWindowIcon(icon);
     UnloadImage(icon);
     SetTargetFPS(60);
 
-    ball.x = displayWidth / 2;
-    ball.y = displayHeight / 2;
-    ball.radius = 15;
-    ball.speed_x = 7;
-    ball.speed_y = 7;
-
-    paddle1.width = 25;
-    paddle1.height = 120;
-    paddle1.x = 10;
-    paddle1.y = displayHeight / 2 - paddle1.height / 2;
-    paddle1.speed = 6;
-
-    paddle2.width = 25;
-    paddle2.height = 120;
-    paddle2.x = displayWidth - paddle2.width - 10;
-    paddle2.y = displayHeight / 2 - paddle1.height / 2;
-    paddle2.speed = 6;
-
     while (!WindowShouldClose())
     {
-        BeginDrawing();
-        ball.Update();
-        paddle1.Update();
-        paddle2.Update(ball.y);
+        Vector2 mousePoint = GetMousePosition();
 
-        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
+        if (Screen == WINDOW)
         {
-            ball.speed_x *= -1;
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 200, 200, 50}))
+                {
+                    Screen = MULTIPLAYER;
+                }
+                else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 300, 200, 50}))
+                {
+                    Screen = COMPUTER;
+                }
+                else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 400, 200, 50}))
+                {
+                    Screen = WINDOW;
+                }
+            }
         }
-        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
-        {
-            ball.speed_x *= -1;
-        }
-        // if(IsKeyDown(KEY_ENTER)){
-        //     currentScreen = MENU;
-        // }
+
+        BeginDrawing();
         ClearBackground(Dark_Green);
-        DrawRectangle(displayWidth / 2, 0, displayWidth / 2, displayHeight, Green);
-        DrawCircle(displayWidth / 2, displayHeight / 2, 150, Light_Green);
-        DrawLine(displayWidth / 2, 0, displayWidth / 2, displayHeight, WHITE);
-        ball.Draw();
-        paddle1.Draw();
-        paddle2.Draw();
-        DrawText(TextFormat("%i", player_score), displayWidth / 4 - 20, 20, 80, WHITE);
-        DrawText(TextFormat("%i", cpu_score), 3 * displayWidth / 4 - 20, 20, 80, WHITE);
+
+        if (Screen == WINDOW)
+        {
+            Menu();
+        }
+        else if (Screen == MULTIPLAYER)
+        {
+            multiplayer.Multiplayer();
+        }
+        else if (Screen == COMPUTER)
+        {
+            comp.Bot();
+        }
         EndDrawing();
     }
     CloseWindow();
+}
+
+void Pong::Menu()
+{
+    DrawText("CHOOSE GAME MODE", displayWidth / 2 - MeasureText("CHOOSE GAME MODE", 40) / 2, 100, 40, DARKGRAY);
+    DrawRectangleRec({(float)displayWidth / 2 - 100, 200, 200, 50}, WHITE);
+    DrawText("Player", 1280/2-100 + (200 - MeasureText("Player", 20)) / 2, 200 + (50 - 20) / 2, 20, DARKGRAY);
+
+    DrawRectangleRec({(float)displayWidth / 2 - 100, 300, 200, 50}, WHITE);
+    DrawText("Computer", 1280/2-100 + (200 - MeasureText("Computer", 20)) / 2, 300 + (50 - 20) / 2, 20, DARKGRAY);
+
+    DrawRectangleRec({(float)displayWidth / 2 - 100, 400, 200, 50}, WHITE);
+    DrawText("Back", 1280/2-100 + (200 - MeasureText("Back", 20)) / 2, 400 + (50 - 20) / 2, 20, DARKGRAY);
 }

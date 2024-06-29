@@ -8,15 +8,20 @@ const Color Dark_Green = {20, 160, 133, 255};
 const Color Light_Green = {129, 204, 184, 255};
 const Color Yellow = {243, 213, 91, 255};
 
-int player_score = 0;
-int cpu_score = 0;
-
 class Ball
 {
 public:
     float x, y;
-    int speed_x, speed_y;
+    float speed_x, speed_y;
     int radius;
+    int player_score;
+    int cpu_score;
+    double lastScoreTime;  // Time since the last score change
+    double speedIncrementInterval;  // Interval to increase speed if no score
+    float speedIncrementFactor;  // Factor by which to increase speed
+    
+    Ball() : x(0), y(0), speed_x(7), speed_y(7), radius(15), player_score(0), cpu_score(0),
+             lastScoreTime(GetTime()), speedIncrementInterval(5.0), speedIncrementFactor(1.1f) {}
 
     void Draw();
     void Reset();
@@ -59,9 +64,10 @@ class Pong
 public:
     Pong();
     void Play(GameScreen&);
-
-private:
+    void Menu();
     int displayWidth;
     int displayHeight;
+
+private:
     Image icon;
 };
