@@ -1,4 +1,5 @@
 #include "pingpong/computer.h"
+#include "settings.cpp"
 
 Computer::Computer()
 {
@@ -21,33 +22,69 @@ Computer::Computer()
     paddle2.speed = 6;
 }
 
-void Computer::Bot()
+void Computer::Bot(GameMode& screen)
 {
-    //InitWindow(displayWidth, displayHeight, "Ping Pong");
-    while (!WindowShouldClose()){
-        ball.Update();
-        paddle1.Update();
-        paddle2.Update(ball.y);
+    currentPlayOption = PLAY_GAME;
+    PauseMenu pause;
 
-        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
+    bool exitGame = false;
+    while (!WindowShouldClose() && !exitGame){
+        if (IsKeyPressed(KEY_SPACE))
         {
-            ball.speed_x *= -1;
+            currentPlayOption = (currentPlayOption == PLAY_GAME) ? PAUSE_GAME : PLAY_GAME;
+            
         }
-        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
-        {
-            ball.speed_x *= -1;
+
+        if(currentPlayOption == PLAY_GAME){
+            ball.Update();
+            paddle1.Update();
+            paddle2.Update(ball.y);
+
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
+            {
+                ball.speed_x *= -1;
+            }
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
+            {
+                ball.speed_x *= -1;
+            }
         }
+        else{
+            pause.pauseMenu(ball);
+        }
+
         BeginDrawing();
         ClearBackground(Dark_Green);
+
         DrawRectangle(displayWidth / 2, 0, displayWidth / 2, displayHeight, Green);
         DrawCircle(displayWidth / 2, displayHeight / 2, 150, Light_Green);
         DrawLine(displayWidth / 2, 0, displayWidth / 2, displayHeight, WHITE);
+        
         ball.Draw();
         paddle1.Draw();
         paddle2.Draw();
+
         DrawText(TextFormat("%i", ball.player_score), displayWidth / 4 - 20, 20, 80, WHITE);
         DrawText(TextFormat("%i", ball.cpu_score), 3 * displayWidth / 4 - 20, 20, 80, WHITE);
+        // Check for 'Back' button press or other exit condition
+        if (IsKeyPressed(KEY_BACKSPACE)) {
+            exitGame = true;
+            screen = WINDOW;
+        }
+
+        if(currentPlayOption == PAUSE_GAME){
+            pause.drawPauseMenu();
+        }
+
+         if(ball.player_score >= pointToWin || ball.cpu_score >= pointToWin){
+            ball.Reset();
+            ball.cpu_score = 0;
+            ball.player_score = 0;
+            ball.GameOver(screen);
+            exitGame = true;
+            screen = WINDOW;
+        }
+        
         EndDrawing();
     }
-    CloseWindow();
 }

@@ -1,6 +1,8 @@
 #include <raylib.h>
 #include "ping_pong.h"
 
+enum GameMode;
+
 class Player{
 private:
     int displayWidth = 1280;
@@ -10,5 +12,5 @@ public:
     Paddle1 paddle1;
     Paddle2 paddle2;
     Player();
-    void Multiplayer();
+    void Multiplayer(GameMode& screen);
 };

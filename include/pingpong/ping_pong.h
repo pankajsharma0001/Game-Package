@@ -3,10 +3,14 @@
 #include <raylib.h>
 #include "screen.h"
 
+enum GameMode { WINDOW = 0, COMPUTER, MULTIPLAYER, SETTING};
+
 const Color Green = {38, 185, 154, 255};
 const Color Dark_Green = {20, 160, 133, 255};
 const Color Light_Green = {129, 204, 184, 255};
 const Color Yellow = {243, 213, 91, 255};
+
+int pointToWin;
 
 class Ball
 {
@@ -26,6 +30,7 @@ public:
     void Draw();
     void Reset();
     void Update();
+    void GameOver(GameMode&);
 };
 
 class Paddle

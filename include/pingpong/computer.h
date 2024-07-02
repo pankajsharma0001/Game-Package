@@ -1,6 +1,8 @@
 #include <raylib.h>
 #include "ping_pong.h"
 
+enum GameMode;
+
 class Computer{
 private:
     int displayWidth = 1280;
@@ -10,5 +12,5 @@ public:
     Paddle1 paddle1;
     cpuPaddle paddle2;
     Computer();
-    void Bot();
+    void Bot(GameMode& screen);
 };

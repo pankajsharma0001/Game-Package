@@ -1,10 +1,7 @@
 #include "pingpong/ping_pong.h"
 #include "computer.cpp"
 #include "player.cpp"
-#include <iostream>
-
-enum GameMode { WINDOW = 0, COMPUTER, MULTIPLAYER};
-GameMode Screen = WINDOW;
+#include "settings.cpp"
 
 void Ball::Draw()
 {
@@ -33,14 +30,14 @@ void Ball::Update()
     { // player wins
         player_score++;
         lastScoreTime = GetTime();
-        sleep(0.8);
+        sleep(1);
         Reset();
     }
     if (x - radius <= 0)
     { // cpu wins
         cpu_score++;
         lastScoreTime = GetTime();
-        sleep(0.8);
+        sleep(1);
         Reset();
     }
     // Check if we need to increase the speed
@@ -51,6 +48,27 @@ void Ball::Update()
         //printf("Speed increased: speed_x = %f, speed_y = %f\n", speed_x, speed_y);  // Debug print
     }
 };
+
+void Ball::GameOver(GameMode& screen)
+{   
+    // Display "GAME OVER" message
+    bool gameOver = true;
+    while (gameOver && !WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        // Display the "GAME OVER" message
+        DrawText("GAME OVER", 1280 / 2 - MeasureText("GAME OVER", 40) / 2, 200, 40, RED);
+        DrawText("Click to Continue", 1280 / 2 - MeasureText("Click to Continue", 20) / 2, 300, 20, DARKGRAY);
+
+        EndDrawing();
+
+        // Check for mouse click to break the loop
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            gameOver = false;
+        }
+    }
+}
 
 void Paddle::LimitMovement()
 {
@@ -108,10 +126,6 @@ void cpuPaddle::Update(int ball_height)
     LimitMovement();
 }
 
-Ball ball;
-cpuPaddle paddle2;
-Paddle1 paddle1;
-
 Pong::Pong()
 {
     displayWidth = 1280;
@@ -123,6 +137,9 @@ void Pong::Play(GameScreen& currentScreen)
 {
     Computer comp;
     Player multiplayer;
+    Setting option;
+    
+    GameMode screen = WINDOW;
 
     InitWindow(displayWidth, displayHeight, "Ping Pong");
     SetWindowIcon(icon);
@@ -133,39 +150,41 @@ void Pong::Play(GameScreen& currentScreen)
     {
         Vector2 mousePoint = GetMousePosition();
 
-        if (Screen == WINDOW)
-        {
-            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-            {
-                if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 200, 200, 50}))
-                {
-                    Screen = MULTIPLAYER;
-                }
-                else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 300, 200, 50}))
-                {
-                    Screen = COMPUTER;
-                }
-                else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 400, 200, 50}))
-                {
-                    Screen = WINDOW;
-                }
-            }
-        }
-
         BeginDrawing();
         ClearBackground(Dark_Green);
 
-        if (Screen == WINDOW)
-        {
+        if (screen == WINDOW) {
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 200, 200, 50})) {
+                    screen = MULTIPLAYER;
+                } else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 300, 200, 50})) {
+                    screen = COMPUTER;
+                } else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 400, 200, 50})) {
+                    screen = SETTING;
+                } else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 500, 200, 50})) {
+                    // Switch to main game screen
+                    currentScreen = MENU;  // Assuming MENU is the main menu screen
+                    break;
+                }
+            }
             Menu();
-        }
-        else if (Screen == MULTIPLAYER)
-        {
-            multiplayer.Multiplayer();
-        }
-        else if (Screen == COMPUTER)
-        {
-            comp.Bot();
+        } else if (screen == MULTIPLAYER) {
+            multiplayer.Multiplayer(screen);
+            screen = WINDOW;  // Return to menu after exiting the game mode
+        } else if (screen == COMPUTER) {
+            comp.Bot(screen);
+            screen = WINDOW;  // Return to menu after exiting the game mode
+        } else if (screen == SETTING) {
+            option.settingMenu(screen);
+
+            // Update game setting after input
+            if (!option.inputActive) {
+                int points = atoi(option.pointsToWin);  // Convert input to integer
+                if (points > 0) {
+                    pointToWin = points;
+                }
+            }
+            screen = WINDOW;
         }
         EndDrawing();
     }
@@ -175,6 +194,7 @@ void Pong::Play(GameScreen& currentScreen)
 void Pong::Menu()
 {
     DrawText("CHOOSE GAME MODE", displayWidth / 2 - MeasureText("CHOOSE GAME MODE", 40) / 2, 100, 40, DARKGRAY);
+
     DrawRectangleRec({(float)displayWidth / 2 - 100, 200, 200, 50}, WHITE);
     DrawText("Player", 1280/2-100 + (200 - MeasureText("Player", 20)) / 2, 200 + (50 - 20) / 2, 20, DARKGRAY);
 
@@ -182,5 +202,8 @@ void Pong::Menu()
     DrawText("Computer", 1280/2-100 + (200 - MeasureText("Computer", 20)) / 2, 300 + (50 - 20) / 2, 20, DARKGRAY);
 
     DrawRectangleRec({(float)displayWidth / 2 - 100, 400, 200, 50}, WHITE);
-    DrawText("Back", 1280/2-100 + (200 - MeasureText("Back", 20)) / 2, 400 + (50 - 20) / 2, 20, DARKGRAY);
+    DrawText("Setting", 1280/2-100 + (200 - MeasureText("Setting", 20)) / 2, 400 + (50 - 20) / 2, 20, DARKGRAY);
+
+    DrawRectangleRec({(float)displayWidth / 2 - 100, 500, 200, 50}, WHITE);
+    DrawText("Back", 1280/2-100 + (200 - MeasureText("Back", 20)) / 2, 500 + (50 - 20) / 2, 20, DARKGRAY);
 }
