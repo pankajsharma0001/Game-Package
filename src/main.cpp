@@ -16,19 +16,15 @@ const int screenHeight = 800;
 const float button_width = 224.0f;
 const float button_height = 318.0f;
 
-const char *buttonTexts[4] = {"PLAY", "MUSIC SETTING", "HELP", "QUIT"};
-const char *button2Text[4] = {"PING PONG", "TETRIS", "2048", "BACK"};
-const char *helpButtonTexts[4] = {"PING PONG", "TETRIS", "2048", "BACK"};
 const char *musicButtonsText[4] = {"VOLUME", "INDIVIDUAL VOLUME", "MUTE", "BACK"};
 
-Color buttonColors[4] = {WHITE, WHITE, WHITE, WHITE};
-Color helpButtonColors[4] = {WHITE, WHITE, WHITE, WHITE};
 Color musicButtonColors[4] = {WHITE, WHITE, WHITE, WHITE};
 Color optionButtonColors[2] = {WHITE, WHITE};
 
 float frameHeight = (float)button_height/NUM_FRAMES;
 
 Rectangle sourceRec = { 0, 0, button_width, frameHeight };
+Rectangle sourceMusicRec = { 0, 0, 112, frameHeight };
 
 Rectangle btnBounds[4] = { 
     {screenWidth/2.0f - button_width/2.0f, 200, button_width, frameHeight},
@@ -36,29 +32,9 @@ Rectangle btnBounds[4] = {
     {screenWidth/2.0f - button_width/2.0f, 500, button_width, frameHeight},
     {screenWidth/2.0f - button_width/2.0f, 650, button_width, frameHeight}};
 
-// Rectangle buttons[4] = {
-//     {screenWidth / 2 - 100, 200, 200, 50},
-//     {screenWidth / 2 - 100, 300, 200, 50},
-//     {screenWidth / 2 - 100, 400, 200, 50},
-//     {screenWidth / 2 - 100, 500, 200, 50}};
-
-Rectangle helpButtons[4] = {
-    {screenWidth / 2 - 100, 100, 200, 50},
-    {screenWidth / 2 - 100, 200, 200, 50},
-    {screenWidth / 2 - 100, 300, 200, 50},
-    {screenWidth / 2 - 100, 400, 200, 50}};
-
-Rectangle musicButtons[4] = {
-    {screenWidth / 2 - 100, 100, 200, 50},
-    {screenWidth / 2 - 100, 200, 200, 50},
-    {screenWidth / 2 - 100, 300, 200, 50},
-    {screenWidth / 2 - 100, 400, 200, 50}};
-
 Rectangle optionButtons[2] = {
-    {screenWidth / 2 + 120, 200, 50, 50},  // Plus button
-    {screenWidth / 2 + 180, 200, 50, 50}}; // Minus button
-
-Rectangle backButton = {screenWidth / 2 - 100, 300, 200, 50}; // Back button in options menu
+    {screenWidth / 2 + 120, 350, 112, frameHeight},  // Plus button
+    {screenWidth / 2 + 260, 350, 112, frameHeight}}; // Minus button
 
 int volume;
 
@@ -84,7 +60,7 @@ public:
 
 void DrawMenu(Texture2D&, Texture2D&, Texture2D&, Texture2D&);
 void DrawPlayOptions(Texture2D&, Texture2D&, Texture2D&, Texture2D&);
-void DrawOptionsMenu();
+void DrawOptionsMenu(Texture2D&, Texture2D&, Texture2D&);
 void DrawHelpMenu(Texture2D&, Texture2D&, Texture2D&, Texture2D&);
 void DrawPINGPONGHELP();
 void Drawtertishelp();
@@ -109,6 +85,9 @@ int main()
     Texture2D ping_pong_button = LoadTexture("./assets/images/ping_pong_button.png");
     Texture2D tetris_button = LoadTexture("./assets/images/tetris_button.png");
     Texture2D T048_button = LoadTexture("./assets/images/2048_button.png");
+
+    Texture2D plus_button = LoadTexture("./assets/images/plus_button.png");
+    Texture2D minus_button = LoadTexture("./assets/images/minus_button.png");
 
     Texture2D back_button = LoadTexture("./assets/images/back_button.png");
     
@@ -169,41 +148,25 @@ int main()
 
         else if (currentScreen == OPTIONS)
         {
-            if (CheckCollisionPointRec(mousePoint, optionButtons[0])) // Plus button
+            if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                optionButtonColors[0] = BROWN;
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+                if (CheckCollisionPointRec(mousePoint, optionButtons[0])) // Plus button
                 {
-                    if (volume < 100)
-                        volume += 10;
-                    SetMusicVolume(gam.background, volume);
+                        if (volume < 100)
+                            volume += 10;
+                        SetMusicVolume(gam.background, volume/100.0f);
                 }
-            }
-            else
-            {
-                optionButtonColors[0] = WHITE;
-            }
 
-            if (CheckCollisionPointRec(mousePoint, optionButtons[1])) // Minus button
-            {
-                optionButtonColors[1] = BROWN;
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+                else if (CheckCollisionPointRec(mousePoint, optionButtons[1])) // Minus button
                 {
-                    if (volume > 0)
-                        volume -= 10;
-                    SetMusicVolume(gam.background, volume);
+                        if (volume > 0)
+                            volume -= 10;
+                        SetMusicVolume(gam.background, volume/100.0f);
                 }
-            }
-            else
-            {
-                optionButtonColors[1] = WHITE;
-            }
 
-            if (CheckCollisionPointRec(mousePoint, backButton))
-            {
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[1]))
                 {
-                    currentScreen = MENU; // Back to main menu
+                        currentScreen = MENU; // Back to main menu
                 }
             }
         }
@@ -254,7 +217,7 @@ int main()
         }
         else if (currentScreen == OPTIONS)
         {
-            DrawOptionsMenu();
+            DrawOptionsMenu(back_button, plus_button, minus_button);
         }
         else if (currentScreen == HELP_MENU)
         {
@@ -308,6 +271,8 @@ int main()
     UnloadTexture(ping_pong_button);
     UnloadTexture(tetris_button);
     UnloadTexture(T048_button);
+    UnloadTexture(plus_button);
+    UnloadTexture(minus_button);
     UnloadTexture(back_button);
     CloseWindow();
     return 0;
@@ -362,22 +327,44 @@ void DrawPlayOptions(Texture2D& ping_pong_button, Texture2D& tetris_button, Text
     }
 }
 
-void DrawOptionsMenu()
+void DrawOptionsMenu(Texture2D& back_button, Texture2D& plus_button, Texture2D& minus_button)
 {
     DrawText("OPTIONS MENU", screenWidth / 2 - MeasureText("OPTIONS MENU", 40) / 2, 25, 40, DARKGRAY);
-    DrawText(TextFormat("VOLUME: %d", volume), screenWidth / 2 - MeasureText(TextFormat("VOLUME: %d", volume), 20) / 2, 150, 20, GRAY);
+    DrawText(TextFormat("VOLUME: %d", volume), screenWidth / 2 - MeasureText(TextFormat("VOLUME: %d", volume), 20) / 2, 300, 40, GRAY);
+
+    Texture2D buttons[3] = {plus_button, minus_button, back_button};
+
+    int btnState = 0; 
+    Vector2 mousePoint = GetMousePosition();
 
     // Draw + and - buttons
     for (int i = 0; i < 2; i++)
     {
-        DrawRectangleRec(optionButtons[i], optionButtonColors[i]);
-    }
-    DrawText("+", optionButtons[0].x + (50 - MeasureText("+", 30)) / 2, optionButtons[0].y + (50 - 30) / 2, 30, BLACK);
-    DrawText("-", optionButtons[1].x + (50 - MeasureText("-", 30)) / 2, optionButtons[1].y + (50 - 30) / 2, 30, BLACK);
+       // Check button state
+        if (CheckCollisionPointRec(mousePoint, optionButtons[i]))
+        {
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) btnState = 2;
+            else btnState = 1;
+        }
 
-    // Draw back button
-    DrawRectangleRec(backButton, WHITE);
-    DrawText("BACK", backButton.x + (200 - MeasureText("BACK", 20)) / 2, backButton.y + (50 - 20) / 2, 20, BLACK);
+        else btnState = 0;
+    // Calculate button frame rectangle to draw depending on button state
+        sourceMusicRec.y = btnState*frameHeight;
+        DrawTextureRec(buttons[i], sourceMusicRec, (Vector2){ optionButtons[i].x, optionButtons[i].y }, WHITE); // Draw button frame
+    }
+
+    // Check button state
+    if (CheckCollisionPointRec(mousePoint, btnBounds[1]))
+    {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) btnState = 2;
+        else btnState = 1;
+    }
+
+    else btnState = 0;
+
+    // Calculate button frame rectangle to draw depending on button state
+    sourceRec.y = btnState*frameHeight;
+    DrawTextureRec(buttons[2], sourceRec, (Vector2){ btnBounds[1].x, btnBounds[1].y }, WHITE); // Draw button frame
 }
 
 void DrawHelpMenu(Texture2D& ping_pong_button, Texture2D& tetris_button, Texture2D& T048_button, Texture2D& back_button)
