@@ -8,8 +8,13 @@
 #include "tetris/position.cpp"
 #include "screen.h"
 
-const int screenWidth = 800;
-const int screenHeight = 600;
+#define NUM_FRAMES  3       // Number of frames (rectangles) for the button sprite texture
+
+const int screenWidth = 1000;
+const int screenHeight = 800;
+
+const float button_width = 224.0f;
+const float button_height = 318.0f;
 
 const char *buttonTexts[4] = {"PLAY", "MUSIC SETTING", "HELP", "QUIT"};
 const char *button2Text[4] = {"PING PONG", "TETRIS", "2048", "BACK"};
@@ -21,11 +26,21 @@ Color helpButtonColors[4] = {WHITE, WHITE, WHITE, WHITE};
 Color musicButtonColors[4] = {WHITE, WHITE, WHITE, WHITE};
 Color optionButtonColors[2] = {WHITE, WHITE};
 
-Rectangle buttons[4] = {
-    {screenWidth / 2 - 100, 200, 200, 50},
-    {screenWidth / 2 - 100, 300, 200, 50},
-    {screenWidth / 2 - 100, 400, 200, 50},
-    {screenWidth / 2 - 100, 500, 200, 50}};
+float frameHeight = (float)button_height/NUM_FRAMES;
+
+Rectangle sourceRec = { 0, 0, button_width, frameHeight };
+
+Rectangle btnBounds[4] = { 
+    {screenWidth/2.0f - button_width/2.0f, 200, button_width, frameHeight},
+    {screenWidth/2.0f - button_width/2.0f, 350, button_width, frameHeight},
+    {screenWidth/2.0f - button_width/2.0f, 500, button_width, frameHeight},
+    {screenWidth/2.0f - button_width/2.0f, 650, button_width, frameHeight}};
+
+// Rectangle buttons[4] = {
+//     {screenWidth / 2 - 100, 200, 200, 50},
+//     {screenWidth / 2 - 100, 300, 200, 50},
+//     {screenWidth / 2 - 100, 400, 200, 50},
+//     {screenWidth / 2 - 100, 500, 200, 50}};
 
 Rectangle helpButtons[4] = {
     {screenWidth / 2 - 100, 100, 200, 50},
@@ -54,6 +69,7 @@ public:
     {
         InitAudioDevice();
         background = LoadMusicStream("./assets/sounds/background.mp3");
+
         PlayMusicStream(background);
         background.looping = true;
         volume = 50;
@@ -66,10 +82,10 @@ public:
     }
 };
 
-void DrawMenu();
-void DrawPlayOptions();
+void DrawMenu(Texture2D&, Texture2D&, Texture2D&, Texture2D&);
+void DrawPlayOptions(Texture2D&, Texture2D&, Texture2D&, Texture2D&);
 void DrawOptionsMenu();
-void DrawHelpMenu();
+void DrawHelpMenu(Texture2D&, Texture2D&, Texture2D&, Texture2D&);
 void DrawPINGPONGHELP();
 void Drawtertishelp();
 void help();
@@ -83,32 +99,45 @@ int main()
     Tertris tertris;
     // Initialization
     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
+    Texture2D backgroundImage = LoadTexture("./assets/images/background_image.png");
 
-   
+    Texture2D play_button = LoadTexture("./assets/images/play_button.png");
+    Texture2D music_button = LoadTexture("./assets/images/music_button.png");
+    Texture2D help_button = LoadTexture("./assets/images/help_button.png");
+    Texture2D quit_button = LoadTexture("./assets/images/quit_button.png");
+
+    Texture2D ping_pong_button = LoadTexture("./assets/images/ping_pong_button.png");
+    Texture2D tetris_button = LoadTexture("./assets/images/tetris_button.png");
+    Texture2D T048_button = LoadTexture("./assets/images/2048_button.png");
+
+    Texture2D back_button = LoadTexture("./assets/images/back_button.png");
+    
+    
     SetTargetFPS(60);
     // Main game loop
     while (!WindowShouldClose())
     {
         // Update
         UpdateMusicStream(gam.background);
+
         Vector2 mousePoint = GetMousePosition();
         if (currentScreen == MENU)
         {
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                if (CheckCollisionPointRec(mousePoint, buttons[0]))
+                if (CheckCollisionPointRec(mousePoint, btnBounds[0]))
                 {
                     currentScreen = PLAY;
                 }
-                else if (CheckCollisionPointRec(mousePoint, buttons[1]))
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[1]))
                 {
                     currentScreen = OPTIONS;
                 }
-                else if (CheckCollisionPointRec(mousePoint, buttons[2]))
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[2]))
                 {
                     currentScreen = HELP_MENU;
                 }
-                else if (CheckCollisionPointRec(mousePoint, buttons[3]))
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[3]))
                 {
                     CloseWindow();
                     return 0;
@@ -119,19 +148,19 @@ int main()
         {
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                if (CheckCollisionPointRec(mousePoint, buttons[0]))
+                if (CheckCollisionPointRec(mousePoint, btnBounds[0]))
                 {
                     currentScreen = PING_PONG;
                 }
-                else if (CheckCollisionPointRec(mousePoint, buttons[1]))
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[1]))
                 {
                     currentScreen = TERTRIS;
                 }
-                else if (CheckCollisionPointRec(mousePoint, buttons[2]))
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[2]))
                 {
                     currentScreen = T048;
                 }
-                else if (CheckCollisionPointRec(mousePoint, buttons[3]))
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[3]))
                 {
                     currentScreen = MENU;
                 }
@@ -180,26 +209,23 @@ int main()
         }
         else if (currentScreen == HELP_MENU)
         {
-            for (int i = 0; i < 4; i++)
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                if (CheckCollisionPointRec(mousePoint, helpButtons[i]))
+                if (CheckCollisionPointRec(mousePoint, btnBounds[0]))
                 {
-                    helpButtonColors[i] = BROWN;
-                    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-                    {
-                        if (i == 0)
-                            currentScreen = PINGPONG_INSTRUCTIONS; // Switch to PING PONG instructions
-                        else if (i == 1)
-                            currentScreen = TERTIS_INSTRUCTIONS;
-                        else if (i == 2)
-                            currentScreen = INSTUCTIONS;
-                        else if (i == 3)
-                            currentScreen = MENU; // Back button
-                    }
+                    currentScreen = PINGPONG_INSTRUCTIONS;
                 }
-                else
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[1]))
                 {
-                    helpButtonColors[i] = WHITE;
+                    currentScreen = TERTIS_INSTRUCTIONS;
+                }
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[2]))
+                {
+                    currentScreen = INSTUCTIONS;
+                }
+                else if (CheckCollisionPointRec(mousePoint, btnBounds[3]))
+                {
+                    currentScreen = MENU;
                 }
             }
         }
@@ -216,14 +242,15 @@ int main()
         // Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
+        DrawTexture(backgroundImage, 0, 0, WHITE);
 
         if (currentScreen == MENU)
         {
-            DrawMenu();
+            DrawMenu(play_button, music_button, help_button, quit_button);
         }
         else if (currentScreen == PLAY)
         {
-            DrawPlayOptions();
+            DrawPlayOptions(ping_pong_button, tetris_button, T048_button, back_button);
         }
         else if (currentScreen == OPTIONS)
         {
@@ -231,7 +258,7 @@ int main()
         }
         else if (currentScreen == HELP_MENU)
         {
-            DrawHelpMenu();
+            DrawHelpMenu(ping_pong_button, tetris_button, T048_button, back_button);
         }
         else if (currentScreen == PINGPONG_INSTRUCTIONS)
         {
@@ -272,41 +299,66 @@ int main()
 
         EndDrawing();
     }
+
+    UnloadTexture(backgroundImage);
+    UnloadTexture(quit_button);
+    UnloadTexture(help_button);
+    UnloadTexture(music_button);
+    UnloadTexture(play_button);
+    UnloadTexture(ping_pong_button);
+    UnloadTexture(tetris_button);
+    UnloadTexture(T048_button);
+    UnloadTexture(back_button);
     CloseWindow();
     return 0;
 }
 
-void DrawMenu()
+void DrawMenu(Texture2D& play_button, Texture2D& music_button, Texture2D& help_button, Texture2D& quit_button)
 {
+    Texture2D buttons[4] = {play_button, music_button, help_button, quit_button};
+    int btnState = 0;               // Button state: 0-NORMAL, 1-MOUSE_HOVER, 2-PRESSED
+
     Vector2 mousePoint = GetMousePosition();
 
     DrawText("MAIN MENU", screenWidth / 2 - MeasureText("MAIN MENU", 40) / 2, 100, 40, DARKGRAY);
-    for (int i = 0; i < 4; i++)
-    {
-        buttonColors[i] = LIGHTGRAY;
-        if (CheckCollisionPointRec(mousePoint, buttons[i]))
+    
+    for(int i=0; i<4; i++){
+    // Check button state
+        if (CheckCollisionPointRec(mousePoint, btnBounds[i]))
         {
-            buttonColors[i] = IsMouseButtonDown(MOUSE_LEFT_BUTTON) ? MAROON : RED;
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) btnState = 2;
+            else btnState = 1;
         }
-        DrawRectangleRec(buttons[i], buttonColors[i]);
-        DrawText(buttonTexts[i], buttons[i].x + (200 - MeasureText(buttonTexts[i], 20)) / 2, buttons[i].y + (50 - 20) / 2, 20, BLACK);
+
+        else btnState = 0;
+    // Calculate button frame rectangle to draw depending on button state
+        sourceRec.y = btnState*frameHeight;
+        DrawTextureRec(buttons[i], sourceRec, (Vector2){ btnBounds[i].x, btnBounds[i].y }, WHITE); // Draw button frame
     }
 }
 
-void DrawPlayOptions()
+void DrawPlayOptions(Texture2D& ping_pong_button, Texture2D& tetris_button, Texture2D& T048_button, Texture2D& back_button)
 {
+    Texture2D buttons[4] = {ping_pong_button, tetris_button, T048_button, back_button};
+    int btnState = 0;               // Button state: 0-NORMAL, 1-MOUSE_HOVER, 2-PRESSED
+
     Vector2 mousePoint = GetMousePosition();
 
     DrawText("PLAY OPTIONS", screenWidth / 2 - MeasureText("PLAY OPTIONS", 40) / 2, 100, 40, DARKGRAY);
+
     for (int i = 0; i < 4; i++)
     {
-        buttonColors[i] = LIGHTGRAY;
-        if (CheckCollisionPointRec(mousePoint, buttons[i]))
+        // Check button state
+        if (CheckCollisionPointRec(mousePoint, btnBounds[i]))
         {
-            buttonColors[i] = IsMouseButtonDown(MOUSE_LEFT_BUTTON) ? MAROON : RED;
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) btnState = 2;
+            else btnState = 1;
         }
-        DrawRectangleRec(buttons[i], buttonColors[i]);
-        DrawText(button2Text[i], buttons[i].x + (200 - MeasureText(button2Text[i], 20)) / 2, buttons[i].y + (50 - 20) / 2, 20, DARKGRAY);
+
+        else btnState = 0;
+    // Calculate button frame rectangle to draw depending on button state
+        sourceRec.y = btnState*frameHeight;
+        DrawTextureRec(buttons[i], sourceRec, (Vector2){ btnBounds[i].x, btnBounds[i].y }, WHITE); // Draw button frame
     }
 }
 
@@ -328,13 +380,28 @@ void DrawOptionsMenu()
     DrawText("BACK", backButton.x + (200 - MeasureText("BACK", 20)) / 2, backButton.y + (50 - 20) / 2, 20, BLACK);
 }
 
-void DrawHelpMenu()
+void DrawHelpMenu(Texture2D& ping_pong_button, Texture2D& tetris_button, Texture2D& T048_button, Texture2D& back_button)
 {
-    DrawText("HELP MENU", screenWidth / 2 - MeasureText("HELP MENU", 40) / 2, 25, 40, DARKGRAY);
+    Texture2D buttons[4] = {ping_pong_button, tetris_button, T048_button, back_button};
+    int btnState = 0;               // Button state: 0-NORMAL, 1-MOUSE_HOVER, 2-PRESSED
+
+    Vector2 mousePoint = GetMousePosition();
+
+    DrawText("HELP MENU", screenWidth / 2 - MeasureText("HELP MENU", 40) / 2, 100, 40, DARKGRAY);
+
     for (int i = 0; i < 4; i++)
     {
-        DrawRectangleRec(helpButtons[i], helpButtonColors[i]);
-        DrawText(helpButtonTexts[i], helpButtons[i].x + (200 - MeasureText(helpButtonTexts[i], 20)) / 2, helpButtons[i].y + (50 - 20) / 2, 20, BLACK);
+        // Check button state
+        if (CheckCollisionPointRec(mousePoint, btnBounds[i]))
+        {
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) btnState = 2;
+            else btnState = 1;
+        }
+
+        else btnState = 0;
+    // Calculate button frame rectangle to draw depending on button state
+        sourceRec.y = btnState*frameHeight;
+        DrawTextureRec(buttons[i], sourceRec, (Vector2){ btnBounds[i].x, btnBounds[i].y }, WHITE); // Draw button frame
     }
 }
 

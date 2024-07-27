@@ -4,6 +4,11 @@
 #include "colors.h"
 #include <iostream>
 #include "screen.h"
+#include "../src/ping_pong/settings.cpp"
+
+class Pause : public PauseMenu{
+
+};
 
 class Tertris
 {

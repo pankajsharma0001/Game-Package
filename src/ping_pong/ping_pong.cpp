@@ -163,8 +163,8 @@ void Pong::Play(GameScreen& currentScreen)
                     screen = SETTING;
                 } else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 500, 200, 50})) {
                     // Switch to main game screen
-                    currentScreen = MENU;  // Assuming MENU is the main menu screen
-                    break;
+                    currentScreen = MENU; 
+                    break; // Assuming MENU is the main menu screen
                 }
             }
             Menu();

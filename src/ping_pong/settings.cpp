@@ -3,46 +3,12 @@
 #include <iostream>
 #pragma once
 
-void Setting::DrawRadioButton(const RadioButton& button) {
-    // Draw the button circle
-    DrawCircleV({button.bounds.x + button.bounds.width / 2, button.bounds.y + button.bounds.height / 2}, button.bounds.width / 2, DARKGRAY);
-    // Draw the inner circle if selected
-    if (button.selected) {
-        DrawCircleV({button.bounds.x + button.bounds.width / 2, button.bounds.y + button.bounds.height / 2}, button.bounds.width / 4, DARKBLUE);
-    }
-    // Draw the label
-    DrawText(button.label, button.bounds.x + button.bounds.width + 10, button.bounds.y, button.bounds.height, DARKGRAY);
-}
-
-void Setting::UpdateRadioButtons(std::vector<RadioButton>& radioButtons, Vector2 mousePos) {
-    for (auto& button : radioButtons) {
-        if (CheckCollisionPointRec(mousePos, button.bounds)) {
-            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                for (auto& btn : radioButtons) {
-                    btn.selected = false;
-                }
-                button.selected = true;
-            }
-        }
-    }
-}
-
 void Setting::settingMenu(GameMode& screen)
 {
-    // Initialize radio buttons
-    std::vector<RadioButton> radioButtons = {
-        {{200, 150, 20, 20}, "Horizontal Paddle", false},
-        {{200, 200, 20, 20}, "Vertical Paddle", false}
-    };
-    // Select the first button initially
-    radioButtons[0].selected = true;
-
     bool exitGame = false;
     while (!WindowShouldClose() && !exitGame) {
         Vector2 mousePos = GetMousePosition();
 
-        // Update radio buttons based on input
-        UpdateRadioButtons(radioButtons, mousePos);
 
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             if (CheckCollisionPointRec(mousePos, {(float)displayWidth / 2 - 100, 500, 200, 50})) {
@@ -56,11 +22,6 @@ void Setting::settingMenu(GameMode& screen)
         ClearBackground(RAYWHITE);
 
         DrawText("SETTINGS", displayWidth / 2 - MeasureText("SETTINGS", 40) / 2, 100, 40, DARKGRAY);
-
-        // Draw each radio button
-        for (const auto& button : radioButtons) {
-            DrawRadioButton(button);
-        }
 
         DrawText("Points to Win:", displayWidth / 2 - 100, 400, 20, DARKGRAY);
 

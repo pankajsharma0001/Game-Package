@@ -10,7 +10,7 @@ const Color Dark_Green = {20, 160, 133, 255};
 const Color Light_Green = {129, 204, 184, 255};
 const Color Yellow = {243, 213, 91, 255};
 
-int pointToWin;
+int pointToWin = 5;
 
 class Ball
 {
@@ -76,3 +76,17 @@ public:
 private:
     Image icon;
 };
+
+class PlaySoundClass{
+public:
+    Sound hittingBall;
+    PlaySoundClass(){
+        InitAudioDevice();
+        hittingBall = LoadSound("./assets/sounds/ping_pong_hitting_pad.wav");
+    }
+    ~PlaySoundClass(){
+        UnloadSound(hittingBall);
+        CloseAudioDevice();
+    }
+};
+//PlaySoundClass play;

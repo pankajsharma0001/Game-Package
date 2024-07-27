@@ -83,7 +83,7 @@ void Game::HandleInput()
     case KEY_UP:
         RotateBlock();
         break;
-    case KEY_SPACE:
+    case KEY_RIGHT_SHIFT:
         std::vector<Position> pos = currentBlock.GetCellPositions();
         int remaining = pos[0].row;
         int res = position - remaining;

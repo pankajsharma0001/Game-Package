@@ -52,6 +52,7 @@ void Tertris::Play()
     SetTargetFPS(60);
 
     Game game = Game();
+    Pause pause;
 
     while (!WindowShouldClose())
     {
@@ -65,6 +66,8 @@ void Tertris::Play()
         //     currentScreen = MENU;
         //     break;
         // }
+        
+
         BeginDrawing();
         ClearBackground(darkBlue);
         DrawTextEx(font, "Score", {365, 15}, 38, 2, WHITE);
@@ -87,6 +90,11 @@ void Tertris::Play()
         Vector2 textSize = MeasureTextEx(font, scoreText, 38, 2);
         DrawTextEx(font, scoreText, {320 + (170 - textSize.x) / 2, 65}, 38, 2, WHITE);
         DrawRectangleRounded({320, 215, 170, 180}, 0.3, 6, lightBlue);
+
+        if(IsKeyDown(KEY_SPACE)){
+            pause.drawPauseMenu();
+        }
+        
         game.Draw();
         EndDrawing();
     }

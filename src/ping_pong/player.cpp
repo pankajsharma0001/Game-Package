@@ -20,13 +20,13 @@ Player::Player()
     paddle2.x = displayWidth - paddle2.width - 10;
     paddle2.y = displayHeight / 2 - paddle1.height / 2;
     paddle2.speed = 6;
-
 }
 
 void Player::Multiplayer(GameMode& screen)
 {
     currentPlayOption = PLAY_GAME;
     PauseMenu pause;
+    PlaySoundClass play;
 
     bool exitGame = false;
     while (!WindowShouldClose() && !exitGame){
@@ -42,10 +42,12 @@ void Player::Multiplayer(GameMode& screen)
 
             if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
             {
+                PlaySound(play.hittingBall);
                 ball.speed_x *= -1;
             }
             if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
             {
+                PlaySound(play.hittingBall);
                 ball.speed_x *= -1;
             }
         }
@@ -68,6 +70,9 @@ void Player::Multiplayer(GameMode& screen)
         DrawText(TextFormat("%i", ball.cpu_score), 3 * displayWidth / 4 - 20, 20, 80, WHITE);
         // Check for 'Back' button press or other exit condition
         if (IsKeyPressed(KEY_BACKSPACE)) {
+            ball.Reset();
+            ball.cpu_score = 0;
+            ball.player_score = 0;
             exitGame = true;
             screen = WINDOW;
         }

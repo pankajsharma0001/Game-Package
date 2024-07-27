@@ -26,13 +26,13 @@ void Computer::Bot(GameMode& screen)
 {
     currentPlayOption = PLAY_GAME;
     PauseMenu pause;
+    PlaySoundClass play;
 
     bool exitGame = false;
     while (!WindowShouldClose() && !exitGame){
         if (IsKeyPressed(KEY_SPACE))
         {
             currentPlayOption = (currentPlayOption == PLAY_GAME) ? PAUSE_GAME : PLAY_GAME;
-            
         }
 
         if(currentPlayOption == PLAY_GAME){
@@ -42,10 +42,12 @@ void Computer::Bot(GameMode& screen)
 
             if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
             {
+                PlaySound(play.hittingBall);
                 ball.speed_x *= -1;
             }
             if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
             {
+                PlaySound(play.hittingBall);
                 ball.speed_x *= -1;
             }
         }
