@@ -43,7 +43,7 @@ public:
     float width, height;
     int speed;
 
-    void Draw();
+    void Draw(Color);
 };
 
 class Paddle1 : public Paddle
@@ -69,7 +69,7 @@ class Pong
 public:
     Pong();
     void Play(GameScreen&);
-    void Menu();
+    void Menu(Texture2D&, Texture2D&, Texture2D&, Texture2D&);
     int displayWidth;
     int displayHeight;
 

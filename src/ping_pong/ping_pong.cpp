@@ -2,7 +2,21 @@
 #include "computer.cpp"
 #include "player.cpp"
 #include "settings.cpp"
+#define NUM_FRAMES  3       // Number of frames (rectangles) for the button sprite texture
 
+const float buttonWidth = 224.0f;
+const float buttonHeight = 318.0f;
+
+float frame_Height = (float)buttonHeight/NUM_FRAMES;
+
+Rectangle source_Rec = { 0, 0, buttonWidth, frame_Height };
+
+Rectangle btn_Bounds[4] = { 
+    {1280/2.0f - buttonWidth/2.0f, 110, buttonWidth, frame_Height},
+    {1280/2.0f - buttonWidth/2.0f, 230, buttonWidth, frame_Height},
+    {1280/2.0f - buttonWidth/2.0f, 350, buttonWidth, frame_Height},
+    {1280/2.0f - buttonWidth/2.0f, 470, buttonWidth, frame_Height}};
+    
 void Ball::Draw()
 {
     DrawCircle(x, y, radius, Yellow);
@@ -82,9 +96,9 @@ void Paddle::LimitMovement()
     }
 }
 
-void Paddle::Draw()
+void Paddle::Draw(Color color)
 {
-    DrawRectangleRounded(Rectangle{x, y, width, height}, 0.8, 0, WHITE);
+    DrawRectangleRounded(Rectangle{x, y, width, height}, 0.8, 0, color);
 }
 
 void Paddle1::Update()
@@ -142,6 +156,13 @@ void Pong::Play(GameScreen& currentScreen)
     GameMode screen = WINDOW;
 
     InitWindow(displayWidth, displayHeight, "Ping Pong");
+
+    Texture2D background_image = LoadTexture("./assets/images/ping_pong_background.png");
+    Texture2D player_button = LoadTexture("./assets/images/player_button.png");
+    Texture2D computer_button = LoadTexture("./assets/images/computer_button.png");
+    Texture2D setting_button = LoadTexture("./assets/images/setting_button.png");
+    Texture2D back_button = LoadTexture("./assets/images/quit_button.png");
+
     SetWindowIcon(icon);
     UnloadImage(icon);
     SetTargetFPS(60);
@@ -152,22 +173,25 @@ void Pong::Play(GameScreen& currentScreen)
 
         BeginDrawing();
         ClearBackground(Dark_Green);
+        DrawTexture(background_image, 0, 0, WHITE);
+
 
         if (screen == WINDOW) {
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 200, 200, 50})) {
+                if (CheckCollisionPointRec(mousePoint, btn_Bounds[0])) {
                     screen = MULTIPLAYER;
-                } else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 300, 200, 50})) {
+                } else if (CheckCollisionPointRec(mousePoint, btn_Bounds[1])) {
                     screen = COMPUTER;
-                } else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 400, 200, 50})) {
+                } else if (CheckCollisionPointRec(mousePoint, btn_Bounds[2])) {
                     screen = SETTING;
-                } else if (CheckCollisionPointRec(mousePoint, {(float)displayWidth / 2 - 100, 500, 200, 50})) {
-                    // Switch to main game screen
-                    currentScreen = MENU; 
+                } else if (CheckCollisionPointRec(mousePoint, btn_Bounds[3])) {
+                    CloseWindow();
+                    //Switch to main game screen
+                    //currentScreen = MENU; 
                     break; // Assuming MENU is the main menu screen
                 }
             }
-            Menu();
+            Menu(player_button, computer_button, setting_button, back_button);
         } else if (screen == MULTIPLAYER) {
             multiplayer.Multiplayer(screen);
             screen = WINDOW;  // Return to menu after exiting the game mode
@@ -189,21 +213,34 @@ void Pong::Play(GameScreen& currentScreen)
         EndDrawing();
     }
     CloseWindow();
+    UnloadTexture(background_image);
+    UnloadTexture(player_button);
+    UnloadTexture(computer_button);
+    UnloadTexture(setting_button);
+    UnloadTexture(back_button);
 }
 
-void Pong::Menu()
+void Pong::Menu(Texture2D& player_button, Texture2D& computer_button, Texture2D& setting_button, Texture2D& back_button)
 {
-    DrawText("CHOOSE GAME MODE", displayWidth / 2 - MeasureText("CHOOSE GAME MODE", 40) / 2, 100, 40, DARKGRAY);
+    Texture2D buttons[4] = {player_button, computer_button, setting_button, back_button};
+    int btnState = 0;               // Button state: 0-NORMAL, 1-MOUSE_HOVER, 2-PRESSED
 
-    DrawRectangleRec({(float)displayWidth / 2 - 100, 200, 200, 50}, WHITE);
-    DrawText("Player", 1280/2-100 + (200 - MeasureText("Player", 20)) / 2, 200 + (50 - 20) / 2, 20, DARKGRAY);
+    Vector2 mousePoint = GetMousePosition();
 
-    DrawRectangleRec({(float)displayWidth / 2 - 100, 300, 200, 50}, WHITE);
-    DrawText("Computer", 1280/2-100 + (200 - MeasureText("Computer", 20)) / 2, 300 + (50 - 20) / 2, 20, DARKGRAY);
+    DrawText("CHOOSE GAME MODE", displayWidth / 2 - MeasureText("CHOOSE GAME MODE", 40) / 2, 50, 40, DARKGRAY);
 
-    DrawRectangleRec({(float)displayWidth / 2 - 100, 400, 200, 50}, WHITE);
-    DrawText("Setting", 1280/2-100 + (200 - MeasureText("Setting", 20)) / 2, 400 + (50 - 20) / 2, 20, DARKGRAY);
+    for (int i = 0; i < 4; i++)
+    {
+        // Check button state
+        if (CheckCollisionPointRec(mousePoint, btn_Bounds[i]))
+        {
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) btnState = 2;
+            else btnState = 1;
+        }
 
-    DrawRectangleRec({(float)displayWidth / 2 - 100, 500, 200, 50}, WHITE);
-    DrawText("Back", 1280/2-100 + (200 - MeasureText("Back", 20)) / 2, 500 + (50 - 20) / 2, 20, DARKGRAY);
+        else btnState = 0;
+    // Calculate button frame rectangle to draw depending on button state
+        source_Rec.y = btnState*frame_Height;
+        DrawTextureRec(buttons[i], source_Rec, (Vector2){ btn_Bounds[i].x, btn_Bounds[i].y }, WHITE); // Draw button frame
+    }
 }

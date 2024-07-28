@@ -16,6 +16,7 @@ private:
     int windowWidth;
     int windowHeight;
     Font font;
+    Image Icon;
     void SaveHighScore(int score);
     int LoadHighScore();
     int highScore;
@@ -23,6 +24,8 @@ private:
 public:
     Tertris();
     bool EventTriggered(double interval);
+    void DrawPauseMenu();
+    void HandlePauseMenu(Game &game);
     void Play();
     ~Tertris()
     {

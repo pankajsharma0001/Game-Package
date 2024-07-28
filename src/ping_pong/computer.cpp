@@ -27,7 +27,8 @@ void Computer::Bot(GameMode& screen)
     currentPlayOption = PLAY_GAME;
     PauseMenu pause;
     PlaySoundClass play;
-
+    Color red = Color{255, 49, 49, 255};
+    Color blue = Color{0, 150, 255, 255};
     bool exitGame = false;
     while (!WindowShouldClose() && !exitGame){
         if (IsKeyPressed(KEY_SPACE))
@@ -43,11 +44,17 @@ void Computer::Bot(GameMode& screen)
             if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
             {
                 PlaySound(play.hittingBall);
+                BeginDrawing();
+                paddle1.Draw(BLUE);
+                EndDrawing();
                 ball.speed_x *= -1;
             }
             if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
             {
                 PlaySound(play.hittingBall);
+                BeginDrawing();
+                paddle2.Draw(RED);
+                EndDrawing();
                 ball.speed_x *= -1;
             }
         }
@@ -56,15 +63,15 @@ void Computer::Bot(GameMode& screen)
         }
 
         BeginDrawing();
-        ClearBackground(Dark_Green);
+        ClearBackground(blue);
 
-        DrawRectangle(displayWidth / 2, 0, displayWidth / 2, displayHeight, Green);
+        DrawRectangle(displayWidth / 2, 0, displayWidth / 2, displayHeight, red);
         DrawCircle(displayWidth / 2, displayHeight / 2, 150, Light_Green);
         DrawLine(displayWidth / 2, 0, displayWidth / 2, displayHeight, WHITE);
         
         ball.Draw();
-        paddle1.Draw();
-        paddle2.Draw();
+        paddle1.Draw(WHITE);
+        paddle2.Draw(WHITE);
 
         DrawText(TextFormat("%i", ball.player_score), displayWidth / 4 - 20, 20, 80, WHITE);
         DrawText(TextFormat("%i", ball.cpu_score), 3 * displayWidth / 4 - 20, 20, 80, WHITE);

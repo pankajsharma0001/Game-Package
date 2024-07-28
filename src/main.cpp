@@ -7,6 +7,7 @@
 #include "tetris/grid.cpp"
 #include "tetris/position.cpp"
 #include "screen.h"
+#include "2048/2048.cpp"
 
 #define NUM_FRAMES  3       // Number of frames (rectangles) for the button sprite texture
 
@@ -15,11 +16,6 @@ const int screenHeight = 800;
 
 const float button_width = 224.0f;
 const float button_height = 318.0f;
-
-const char *musicButtonsText[4] = {"VOLUME", "INDIVIDUAL VOLUME", "MUTE", "BACK"};
-
-Color musicButtonColors[4] = {WHITE, WHITE, WHITE, WHITE};
-Color optionButtonColors[2] = {WHITE, WHITE};
 
 float frameHeight = (float)button_height/NUM_FRAMES;
 
@@ -40,15 +36,17 @@ int volume;
 
 class Main{
 public:
+    Image menu_icon;
     Music background;
     Main()
     {
         InitAudioDevice();
         background = LoadMusicStream("./assets/sounds/background.mp3");
+        menu_icon = LoadImage("./assets/images/menu.png");
 
         PlayMusicStream(background);
         background.looping = true;
-        volume = 50;
+        volume = 30;
         SetMusicVolume(background, volume/100.0f);
     }
     ~Main(){
@@ -66,15 +64,19 @@ void DrawPINGPONGHELP();
 void Drawtertishelp();
 void help();
 
- GameScreen currentScreen = MENU;
+GameScreen currentScreen = MENU;
 
-int main()
-{
+int main(){
     Main gam;
     Pong pong;
     Tertris tertris;
+    Game2048 game_2048;
     // Initialization
     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
+
+    SetWindowIcon(gam.menu_icon);
+    UnloadImage(gam.menu_icon);
+
     Texture2D backgroundImage = LoadTexture("./assets/images/background_image.png");
 
     Texture2D play_button = LoadTexture("./assets/images/play_button.png");
@@ -90,8 +92,7 @@ int main()
     Texture2D minus_button = LoadTexture("./assets/images/minus_button.png");
 
     Texture2D back_button = LoadTexture("./assets/images/back_button.png");
-    
-    
+
     SetTargetFPS(60);
     // Main game loop
     while (!WindowShouldClose())
@@ -205,7 +206,7 @@ int main()
         // Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawTexture(backgroundImage, 0, 0, WHITE);
+        DrawTexture(backgroundImage, 0, 0, RAYWHITE);
 
         if (currentScreen == MENU)
         {
@@ -239,27 +240,19 @@ int main()
         {
             gam.~Main();
             CloseWindow();
-            // InitWindow(1280, 600, "Ping Pong");
             pong.Play(currentScreen);
-            // if (currentScreen == MENU)
-            // {
-            //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
-            //     PlayMusicStream(gam.background); // Restart background music if required
-            // }
         }
         else if (currentScreen == TERTRIS)
         {
             gam.~Main();
             CloseWindow();
-            // InitWindow(500, 620, "Tertris");
             tertris.Play();
-            // if (currentScreen == MENU)
-            // {
-            //     InitWindow(screenWidth, screenHeight, "ClassicFun: Timeless Games Collection");
-            //     PlayMusicStream(gam.background); // Restart background music if required
-            // }
         }
-
+        else if (currentScreen == T048){
+            gam.~Main();
+            CloseWindow();
+            game_2048.Start();
+        }
         EndDrawing();
     }
 
