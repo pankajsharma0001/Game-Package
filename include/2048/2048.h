@@ -14,6 +14,7 @@ private:
     const int GAME_AREA_HEIGHT = TILE_SIZE * GRID_SIZE; // Game area height
     const float ANIMATION_SPEED = 0.08f;
     bool gameOver; // Variable to track game state
+    bool gameWon;
     Sound move;
     Sound win;
 
@@ -31,6 +32,7 @@ public:
     void MoveLeft();
     void MoveRight();
     void CheckWinCondition();
+    bool IsMovePossible();
     void Draw();
     void UpdateHighScore();
     int LoadHighScore();
