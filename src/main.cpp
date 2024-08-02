@@ -392,11 +392,11 @@ void DrawPINGPONGHELP()
     // Computer vs Player Instructions
     DrawText("FOR COMPUTER VS PLAYER", screenWidth / 2 - MeasureText("FOR COMPUTER VS PLAYER", 20) / 2, 80, 25, RED);
 
-    DrawText("1. Computer controls the left paddle, you control the right.", 50, 110, 20, BLACK);
-    DrawText("2. Use arrow keys to move the paddle up and down.", 50, 140, 20, BLACK);
+    DrawText("1. Computer controls the right paddle, you control the left.", 50, 110, 20, BLACK);
+    DrawText("2. Use W and S key to move the paddle up and down.", 50, 140, 20, BLACK);
     DrawText("3. Hit the ball back and forth with the paddle.", 50, 170, 20, BLACK);
     DrawText("4. Don't let the ball pass your paddle.", 50, 200, 20, BLACK);
-    DrawText("5. First player to 20 points wins.", 50, 230, 20, BLACK);
+    DrawText("5. First player score specified points (default = 5) wins.", 50, 230, 20, BLACK);
 
     // Multiplayer Instructions
     DrawText("FOR MULTIPLAYER", screenWidth / 2 - MeasureText("FOR MULTIPLAYER", 20) / 2, 280, 25, RED);
@@ -405,9 +405,11 @@ void DrawPINGPONGHELP()
     DrawText("3. Use 'W' and 'S' keys to move the left paddle.", 50, 370, 20, BLACK);
     DrawText("4. Hit the ball back and forth with the paddles.", 50, 400, 20, BLACK);
     DrawText("5. Don't let the ball pass your paddle.", 50, 430, 20, BLACK);
-    DrawText("6. First player to 20 points wins.", 50, 460, 20, BLACK);
+    DrawText("6. First player to score specified points (default = 5) wins.", 50, 460, 20, BLACK);
 
-    DrawText("CLICK ANYWHERE TO GO BACK", screenWidth / 2 - MeasureText("CLICK ANYWHERE TO GO BACK", 20) / 2, 510, 20, RED);
+    DrawText("Press Space key to pause the game", 50, 490, 30, BLACK);
+
+    DrawText("CLICK ANYWHERE TO GO BACK", screenWidth / 2 - MeasureText("CLICK ANYWHERE TO GO BACK", 20) / 2, 530, 20, RED);
 }
 
 void Drawtertishelp()
@@ -416,9 +418,10 @@ void Drawtertishelp()
 
     DrawText("1. Use arrow keys to move the blocks.", 50, 110, 20, BLACK);
     DrawText("2. Use 'Up arrow key' to rotate the blocks.", 50, 140, 20, BLACK);
-    DrawText("3. Use 'Space' to directly place the block.", 50, 170, 20, BLACK);
-    DrawText("4. Complete a line to clear it.", 50, 200, 20, BLACK);
-    DrawText("5. Don't let the blocks reach the top.", 50, 230, 20, BLACK);
+    DrawText("3. Use 'Right Shift' to directly place the block.", 50, 170, 20, BLACK);
+    DrawText("4. Use 'Space' to pause the game.", 50, 200, 20, BLACK);
+    DrawText("5. Complete a line to clear it.", 50, 230, 20, BLACK);
+    DrawText("6. Don't let the blocks reach the top.", 50, 260, 20, BLACK);
 
     DrawText("CLICK ANYWHERE TO GO BACK", screenWidth / 2 - MeasureText("CLICK ANYWHERE TO GO BACK", 20) / 2, 510, 20, RED);
 }
