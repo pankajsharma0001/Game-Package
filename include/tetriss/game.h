@@ -11,6 +11,7 @@ public:
     void HandleInput();
     void MoveBlockDown();
     bool gameOver;
+    void Reset();
     int score;
     Music music;
 
@@ -23,7 +24,6 @@ private:
     void RotateBlock();
     void LockBlock();
     bool BlockFits();
-    void Reset();
     void UpdateScore(int linesCleared, int moveDownPoints);
     Grid grid;
     int position;

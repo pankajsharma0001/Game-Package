@@ -87,12 +87,12 @@ void Game::HandleInput()
         std::vector<Position> pos = currentBlock.GetCellPositions();
         int remaining = pos[0].row;
         int res = position - remaining;
+        UpdateScore(0, res * (-5));
         while (res >= 0)
         {
             MoveBlockDown();
             res--;
         }
-        UpdateScore(0, res * (-5));
     }
 }
 

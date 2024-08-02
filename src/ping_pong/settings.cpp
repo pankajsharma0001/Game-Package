@@ -102,7 +102,7 @@ void PauseMenu::drawPauseMenu(){
     DrawText("Back", menuX, menuY + 2 * menuSpacing, 30, currentOption == BACK ? YELLOW : DARKBROWN);
 }
 
-void PauseMenu::pauseMenu(Ball& b){
+void PauseMenu::pauseMenu(Ball& b, GameMode& screen, bool& exitGame){
         const int menuX = 500;
         const int menuY = 300;
         const int menuSpacing = 50;
@@ -141,7 +141,9 @@ void PauseMenu::pauseMenu(Ball& b){
             currentOption = BACK;
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
             {
-                currentPlayOption = PLAY_GAME;
+                //currentPlayOption = PLAY_GAME;
+                exitGame = true;
+                screen = WINDOW;
             }
         }
 
@@ -192,7 +194,9 @@ void PauseMenu::pauseMenu(Ball& b){
             }
             else if (currentOption == BACK)
             {
-                currentPlayOption = PLAY_GAME;
+                // currentPlayOption = PLAY_GAME;
+                exitGame = true;
+                screen = WINDOW;
             }
         }
 }

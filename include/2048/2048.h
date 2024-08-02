@@ -13,7 +13,8 @@ private:
     const int GAME_AREA_WIDTH = TILE_SIZE * GRID_SIZE; // Game area width
     const int GAME_AREA_HEIGHT = TILE_SIZE * GRID_SIZE; // Game area height
     const float ANIMATION_SPEED = 0.08f;
-    bool gameOver; // Variable to track game state
+    bool gameOver;
+    bool gameOver1=false; // Variable to track game state
     bool gameWon;
     Sound move;
     Sound win;
@@ -31,7 +32,10 @@ public:
     void MoveDown();
     void MoveLeft();
     void MoveRight();
-    void CheckWinCondition();
+    void GameOverCondition();
+    void GameOverCondition(bool gameover1);
+    bool HasEmptyCells();
+    bool HasAdjacentTiles();
     bool IsMovePossible();
     void Draw();
     void UpdateHighScore();

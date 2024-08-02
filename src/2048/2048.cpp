@@ -50,7 +50,7 @@ void Game2048::AddRandomTile()
             {
                 if (target == 0)
                 {
-                    board[i][j] = (rand() % 5 == 0) ? 2 : 4;
+                    board[i][j] = (rand() % 5 == 0) ? 4 : 2;
                     return;
                 }
                 target--;
@@ -78,11 +78,9 @@ void Game2048::SlideTiles(int direction)
     {
         AddRandomTile();
         UpdateHighScore();
-        CheckWinCondition(); // Check for win after a move
-        if (!IsMovePossible())
-        {
-            gameOver = true;
-        }
+        GameOverCondition(); // Check for win after a move
+        GameOverCondition(gameOver1); 
+        
     }
 }
 
@@ -230,7 +228,7 @@ void Game2048::MoveRight()
     }
 }
 
-void Game2048::CheckWinCondition()
+void Game2048::GameOverCondition()
 {
     for (int i = 0; i < GRID_SIZE; ++i)
     {
@@ -245,27 +243,36 @@ void Game2048::CheckWinCondition()
     }
 }
 
-bool Game2048::IsMovePossible()
-{
-    for (int i = 0; i < GRID_SIZE; ++i)
-    {
-        for (int j = 0; j < GRID_SIZE; ++j)
-        {
-            if (board[i][j] == 0)
-                return true; // Move is possible if there is an empty tile
+ void Game2048:: GameOverCondition(bool gameOver1) {
+        if (  Game2048::HasEmptyCells() || Game2048::HasAdjacentTiles()) {
+            return; // Game is not over
+        }
+        gameOver1 = true;
+        Game2048::GameOver(); // Set game over if no valid moves left
+    }
 
-            // Check adjacent tiles for possible merges
-            if ((i > 0 && board[i][j] == board[i - 1][j]) ||
-                (i < GRID_SIZE - 1 && board[i][j] == board[i + 1][j]) ||
-                (j > 0 && board[i][j] == board[i][j - 1]) ||
-                (j < GRID_SIZE - 1 && board[i][j] == board[i][j + 1]))
-            {
-                return true; // Move is possible if there are adjacent tiles with the same number
+    // Function to check if there are empty cells
+    bool  Game2048::HasEmptyCells() {
+        for (const auto& row : board) {
+            for (int value : row) {
+                if (value == 0) {
+                    return true; // There are empty cells
+                }
             }
         }
+        return false; // No empty cells
     }
-    return false; // No moves possible
-}
+
+    // Function to check if there are adjacent tiles with the same value
+    bool Game2048::HasAdjacentTiles() {
+        for (int i = 0; i < GRID_SIZE; ++i) {
+            for (int j = 0; j < GRID_SIZE; ++j) {
+                if (j < GRID_SIZE - 1 && board[i][j] == board[i][j + 1]) return true; // Right
+                if (i < GRID_SIZE - 1 && board[i][j] == board[i + 1][j]) return true; // Down
+            }
+        }
+        return false; // No adjacent tiles with the same value
+    }
 
 void Game2048::Draw()
 {
@@ -320,7 +327,7 @@ void Game2048::Draw()
     if (gameWon)
     {
         DrawText("Congratulations! You Win!", 180, GAME_AREA_HEIGHT / 2 - 20, 40, endtext);
-        DrawText("Click to Restart", 800 / 2 - MeasureText("Click to Restart", 20) / 2, 300, 40, DARKGRAY);
+        DrawText("Click to Restart", 260, 300, 40, DARKGRAY);
 
         // Check for mouse click to restart the game
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
@@ -338,12 +345,7 @@ void Game2048::Draw()
             gameWon = false;
         }
     }
-    // Draw game over message
-    if (gameOver)
-    {
-        DrawText("GAME OVER", 800 / 2 - MeasureText("GAME OVER", 40) / 2, 200, 60, RED);
-        DrawText("Click to Continue", 800 / 2 - MeasureText("Click to Continue", 20) / 2, 300, 40, DARKGRAY);
-    }
+   
 }
 
 void Game2048::UpdateHighScore()
@@ -383,11 +385,11 @@ void Game2048::GameOver()
     while (!continueGame && !WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(LIGHTGRAY);
 
         // Display the "GAME OVER" message
-        DrawText("GAME OVER", 800 / 2 - MeasureText("GAME OVER", 40) / 2, 200, 60, RED);
-        DrawText("Click to Continue", 800 / 2 - MeasureText("Click to Continue", 20) / 2, 300, 40, DARKGRAY);
+        DrawText("GAME OVER", 200 ,200, 60, RED);
+        DrawText("Click to Continue", 210 , 300, 40, BLACK);
 
         EndDrawing();
 

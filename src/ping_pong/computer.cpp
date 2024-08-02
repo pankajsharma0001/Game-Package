@@ -1,5 +1,6 @@
 #include "pingpong/computer.h"
 #include "settings.cpp"
+#include "collision.cpp"
 
 Computer::Computer()
 {
@@ -27,6 +28,8 @@ void Computer::Bot(GameMode& screen)
     currentPlayOption = PLAY_GAME;
     PauseMenu pause;
     PlaySoundClass play;
+    Collision collision;
+
     Color red = Color{255, 49, 49, 255};
     Color blue = Color{0, 150, 255, 255};
     bool exitGame = false;
@@ -41,7 +44,7 @@ void Computer::Bot(GameMode& screen)
             paddle1.Update();
             paddle2.Update(ball.y);
 
-            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
+            if (collision.collision_Detection(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle1.x, paddle1.y, paddle1.width, paddle1.height}))
             {
                 PlaySound(play.hittingBall);
                 BeginDrawing();
@@ -49,7 +52,7 @@ void Computer::Bot(GameMode& screen)
                 EndDrawing();
                 ball.speed_x *= -1;
             }
-            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
+            if (collision.collision_Detection(Vector2{ball.x, ball.y}, ball.radius, Rectangle{paddle2.x, paddle2.y, paddle2.width, paddle2.height}))
             {
                 PlaySound(play.hittingBall);
                 BeginDrawing();
@@ -59,7 +62,7 @@ void Computer::Bot(GameMode& screen)
             }
         }
         else{
-            pause.pauseMenu(ball);
+            pause.pauseMenu(ball, screen, exitGame);
         }
 
         BeginDrawing();

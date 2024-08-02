@@ -2,8 +2,6 @@
 #include <fstream>
 #include <iostream>
 
-//#include <cstdio>
-
 const char* highScoreFilePath = "assets/highscore.txt";
 double lastUpdateTime = 0;
 
@@ -63,7 +61,7 @@ void Tertris::DrawPauseMenu() {
     DrawText("GAME PAUSED", menuX, menuY - 100, 40, yellow);
     DrawText("Resume", menuX, menuY-40, 30, currentGameState== PLAYING ? YELLOW : Green);
 
-    DrawText("Back",menuX,menuY+menuSpacing-30,30,yellow);
+    DrawText("Quit",menuX,menuY+menuSpacing-30,30,yellow);
 
 }
 
@@ -72,7 +70,7 @@ void Tertris::HandlePauseMenu(Game& game) {
   
 
     float text1Width=MeasureText("Resume", 30);
-    float text2Width=MeasureText("Back", 30);
+    float text2Width=MeasureText("Quit", 30);
 
     Rectangle resumeButton = {150, 260, text1Width, 35};
     Rectangle backButton = {150, 320, text2Width, 35};
@@ -99,8 +97,8 @@ void Tertris::Play()
     SetTargetFPS(60);
 
     Game game = Game();
-    
-    while (!WindowShouldClose())
+    bool exit_game = false;
+    while (!WindowShouldClose() && !exit_game)
     {
         UpdateMusicStream(game.music);
 
@@ -117,6 +115,11 @@ void Tertris::Play()
             if (EventTriggered(0.5)) {
                 game.MoveBlockDown();
             }
+        }        
+        if (currentGameState == menu) {
+            exit_game = true;
+            CloseWindow();
+            
         }        
 
         BeginDrawing();
@@ -150,6 +153,7 @@ void Tertris::Play()
             HandlePauseMenu(game);
         }
         if(IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_BACKSPACE)){
+            game.gameOver = true;
             CloseWindow();
         }
         EndDrawing();

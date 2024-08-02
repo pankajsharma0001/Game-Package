@@ -24,5 +24,5 @@ enum MenuOption {RESUME, RESTART, BACK};
 class PauseMenu{
 public:
     void drawPauseMenu();
-    void pauseMenu(Ball&);
+    void pauseMenu(Ball&, GameMode&, bool&);
 };
