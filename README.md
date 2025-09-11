@@ -28,7 +28,7 @@ completes 2048.
 
 ## Installation
 
-To run the games in this repository, you need to have Raylib installed on your system. Follow the steps below to set up your environment:
+To run the games in this repository, you need to have Raylib installed on your system. Make sure that you have not minGW is not installed and is not included in the environment variable. Follow the steps below to set up your environment:
 
 ## Installation
 
