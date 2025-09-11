@@ -1,6 +1,6 @@
 # Game Package with Raylib
 
-Welcome to the Game Package repository! This project contains a collection of games developed using the Raylib library in C++. The first game included is Ping Pong, and more games will be added in the future.
+Welcome to the Game Package repository! This project contains a collection of games developed using the Raylib library in C++. The first game included is Ping Pong, Tetris, 2048 and more games will be added in the future.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -19,11 +19,16 @@ This project is a game package developed using the [Raylib](https://www.raylib.c
 ### 1. Ping Pong
 A classic Ping Pong game where two players control paddles to hit the ball back and forth. The game continues until one player scores the winning point.
 
-Future games will be added to this package, enhancing the variety and fun.
+### 2. Tetris
+A classic game where player have to complete a row of tile from seven unique blocks and prevent the block to reach the top of screen.
+
+### 3. 2048
+A classic game where player have to slide the tiles a two tile with same value merge to form double of that tile. The game is over when you reach out of move or
+completes 2048.
 
 ## Installation
 
-To run the games in this repository, you need to have Raylib installed on your system. Follow the steps below to set up your environment:
+To run the games in this repository, you need to have Raylib installed on your system. Make sure that you have not minGW is not installed and is not included in the environment variable. Follow the steps below to set up your environment:
 
 ## Installation
 
@@ -81,11 +86,37 @@ To run the games in this repository, you need to have Raylib installed on your s
 
 ## Usage
 
-After building the project, you can run the game using the command mentioned above. Use the following controls to play Ping Pong:
+After building the project, you can run the game using the command mentioned above.  
+Use the following controls to play   
+**1. Ping Pong:**
 
-- **Player Controls:**
+- **Single Player Controls:**
   - `W` - Move paddle up
   - `S` - Move paddle down
+  - `Space` - Pause the game
+
+- **Double Player Controls:**
+  - `W` - Move left paddle up
+  - `S` - Move left paddle down
+  - `Up Arrow` - Move right paddle up
+  - `Down Arrow` - Move right paddle down
+  - `Space` - Pause the game
+
+**2. Tetris**
+
+  - `Left Arrow` - Move block left
+  - `Right Arrow` - Move block right
+  - `Up Arrow` - Rotate block
+  - `Down Arrow` - Move block down quickly
+  - `Right Shift` - Directly place the block at the bottom
+  - `Space` - Pause
+
+**3. 2048**
+
+  - `Left Arrow` - Slide block left
+  - `Right Arrow` - Slide block right
+  - `Up Arrow` - Slide block up
+  - `Down Arrow` - Slide block down
 
 ## Contributing
 
