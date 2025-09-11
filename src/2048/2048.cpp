@@ -426,13 +426,13 @@ void Game2048::Start()
     {
         if (!game.gameOver && !game.gameWon)
         {
-            if (IsKeyPressed(KEY_UP))
+            if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
                 game.SlideTiles(0);
-            if (IsKeyPressed(KEY_RIGHT))
+            if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D))
                 game.SlideTiles(1);
-            if (IsKeyPressed(KEY_DOWN))
+            if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
                 game.SlideTiles(2);
-            if (IsKeyPressed(KEY_LEFT))
+            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A))
                 game.SlideTiles(3);
         }
         else if (game.gameOver)
